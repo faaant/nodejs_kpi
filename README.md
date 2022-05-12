@@ -1,7 +1,9 @@
 # Grocery store
 ## Tech stack
-Nest
-MySQL
+<ol>
+  <li>Nest</li>
+  <li>MySQL</li>
+</ol>
 
 ## Why
 ### Nest: 

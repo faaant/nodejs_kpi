@@ -1,4 +1,5 @@
 import { Controller, Delete, Param, Post, Put, Req } from '@nestjs/common';
+import { Request } from 'express';
 
 @Controller('products')
 export class ProductsController {

@@ -18,3 +18,6 @@
   <li>Relative table structure</li>
   <li>Experience in MySQL</li>
 </ul>
+
+## Database schema
+![This is database schema](/docs/db_schema.png)

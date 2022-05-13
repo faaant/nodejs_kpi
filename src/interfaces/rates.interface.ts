@@ -1,3 +1,3 @@
 export interface ExchangeRates {
-    [key: string]: number
+  [key: string]: number;
 }

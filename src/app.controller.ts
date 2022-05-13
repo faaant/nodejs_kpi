@@ -13,9 +13,12 @@ export class AppController {
 
   @Post('exchange/rate')
   getRate() {
-    return this.appService.getRates()
-    .then((data)=>{
-      return data.data.uah
-    })
+    return this.appService.getRates().then((data) => {
+      return data.data.uah;
+    });
+    //usd
+    //uah
+    //eur
+    //pln
   }
 }

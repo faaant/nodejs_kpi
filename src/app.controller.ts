@@ -1,5 +1,6 @@
 import { Controller, Get, Post } from '@nestjs/common';
 import { AppService } from './app.service';
+import { ExchangeRates } from './interfaces/rates.interface';
 
 @Controller()
 export class AppController {
@@ -10,5 +11,11 @@ export class AppController {
     return this.appService.getHello();
   }
 
-  // 3rd party service request
+  @Post('exchange/rate')
+  getRate() {
+    return this.appService.getRates()
+    .then((data)=>{
+      return data.data.uah
+    })
+  }
 }

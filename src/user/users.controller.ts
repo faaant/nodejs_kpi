@@ -6,9 +6,10 @@ import {
   Put,
   Delete,
   Param,
+  Req,
 } from '@nestjs/common';
-import { UserService } from './user.service';
-import { User } from './user.entity';
+import { UserService } from './users.service';
+import { Request } from 'express';
 
 @Controller('users')
 export class UsersController {
@@ -24,14 +25,31 @@ export class UsersController {
     return this.service.getUser(params.id);
   }
 
-  // @Post()
-  // create(@Body() user: User) {
-  //     return this.service.createUser(user);
-  // }
+  @Post()
+  create(@Req() request: Request) {
+    console.log(request.body);
+    if (
+      request?.body?.username &&
+      request?.body?.password &&
+      request?.body?.roleId
+    ) {
+      this.service.createUser(request.body);
+      return `This action create new user`;
+    }
+  }
 
   @Put()
-  update(@Body() user: User) {
-    return this.service.updateUser(user);
+  update(@Param() params, @Req() request: Request) {
+    if (
+      request?.body?.username &&
+      request?.body?.password &&
+      request?.body?.roleId
+    ) {
+      const user = request.body;
+      user.id = params.id;
+      this.service.updateUser(user);
+      return `This action update user`;
+    }
   }
 
   @Delete(':id')

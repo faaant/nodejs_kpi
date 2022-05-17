@@ -1,13 +1,4 @@
-import {
-  Controller,
-  Post,
-  Body,
-  Get,
-  Put,
-  Delete,
-  Param,
-  Req,
-} from '@nestjs/common';
+import { Controller, Post, Get, Put, Delete, Param, Req } from '@nestjs/common';
 import { UserService } from './users.service';
 import { Request } from 'express';
 

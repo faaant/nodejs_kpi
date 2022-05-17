@@ -32,10 +32,7 @@ export class UsersController {
 
   @Post()
   create(@Req() request: Request) {
-    if (
-      request?.body?.username &&
-      request?.body?.password
-    ) {
+    if (request?.body?.username && request?.body?.password) {
       this.service.createUser(request.body);
       return `This action create new user`;
     }
@@ -44,11 +41,7 @@ export class UsersController {
   @UseGuards(AuthGuard('jwt'))
   @Put()
   update(@Param() params, @Req() request: Request) {
-    if (
-      request?.body?.username &&
-      request?.body?.password &&
-      request?.body?.roleId
-    ) {
+    if (request?.body?.username && request?.body?.password) {
       const user = request.body;
       user.id = params.id;
       this.service.updateUser(user);

@@ -34,15 +34,10 @@ import { JwtinsertionMiddleware } from './jwtinsertion.middleware';
     SharedModule,
   ],
   controllers: [AppController],
-  providers: [
-    AppService
-  ],
+  providers: [AppService],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(JwtinsertionMiddleware)
-      .exclude("auth/(.*)")
-      .forRoutes("*");
+    consumer.apply(JwtinsertionMiddleware).exclude('auth/(.*)').forRoutes('*');
   }
 }

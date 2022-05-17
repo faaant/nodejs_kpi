@@ -6,13 +6,13 @@ export class User {
   @PrimaryGeneratedColumn('uuid')
   id: number;
 
-  @Column({unique: true})
+  @Column({ unique: true })
   username: string;
 
   @Column()
   password: string;
 
-  @Column('int',{default:1})
+  @Column('int', { default: 1 })
   roleId: number;
 
   @ManyToOne((type) => Role, (role) => role)

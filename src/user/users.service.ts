@@ -13,11 +13,13 @@ export class UserService {
     return await this.usersRepository.find();
   }
 
-  async getUser(_id: number): Promise<User[]> {
-    return await this.usersRepository.find({
-      select: ['id', 'username', 'password', 'role'],
-      where: [{ id: _id }],
-    });
+  async getUser(username: string): Promise<User> {
+    return (
+      await this.usersRepository.find({
+        select: ['id', 'username', 'password', 'role'],
+        where: [{ username }],
+      })
+    )[0];
   }
 
   async updateUser(user: User) {

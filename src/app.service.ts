@@ -1,7 +1,7 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
-import { ExchangeRates } from './interfaces/rates.interface';
+import { ExchangeRates } from './shared/interfaces/rates.interface';
 
 @Injectable()
 export class AppService {
@@ -10,6 +10,7 @@ export class AppService {
   getHello(): string {
     return 'Hello World!';
   }
+
   async getRates(): Promise<any> {
     const result = await firstValueFrom(
       this.httpService.get(

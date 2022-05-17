@@ -1,6 +1,6 @@
 import { Controller, Get, Post } from '@nestjs/common';
 import { AppService } from './app.service';
-import { ExchangeRates } from './interfaces/rates.interface';
+import { ExchangeRates } from './shared/interfaces/rates.interface';
 
 @Controller()
 export class AppController {

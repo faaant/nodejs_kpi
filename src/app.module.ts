@@ -1,6 +1,7 @@
 import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import entities from './entities';
@@ -9,6 +10,8 @@ import { ProductsModule } from './products/products.module';
 import { RoleModule } from './role/role.module';
 import { UsersModule } from './user/users.module';
 import { UsersProductsModule } from './users-products/users-products.module';
+import { AuthModule } from './auth/auth.module';
+import { SharedModule } from './shared/shared.module';
 
 @Module({
   imports: [
@@ -27,6 +30,8 @@ import { UsersProductsModule } from './users-products/users-products.module';
     UsersProductsModule,
     ProductsModule,
     HttpModule,
+    AuthModule,
+    SharedModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,4 +1,4 @@
-# Grocery store
+# Store
 ## Tech stack
 <ol>
   <li>Nest</li>

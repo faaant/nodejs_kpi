@@ -32,11 +32,9 @@ export class UsersController {
 
   @Post()
   create(@Req() request: Request) {
-    console.log(request.body);
     if (
       request?.body?.username &&
-      request?.body?.password &&
-      request?.body?.roleId
+      request?.body?.password
     ) {
       this.service.createUser(request.body);
       return `This action create new user`;

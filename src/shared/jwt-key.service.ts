@@ -8,7 +8,7 @@ export class JWTTokenService {
     this.JWTtoken = token;
   }
 
-  public getToken(token: string) {
+  public getToken() {
     return this.JWTtoken;
   }
 }

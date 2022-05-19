@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
-import { PermissionGuard } from 'src/guards/permission.guard';
+import { PermissionGuard } from '../../guards/permission.guard';
 
 import { Permissions } from '../../shared/decorators/permissions.decorator';
 import { Product } from './products.entity';
@@ -20,7 +20,8 @@ import { ProductsService } from './products.service';
 export class ProductsController {
   constructor(private service: ProductsService) {}
 
-  @UseGuards(AuthGuard('jwt'))
+  @Permissions('create-product')
+  @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Post()
   createProduct(@Req() request: Request) {
     if (request?.body?.productName && request?.body?.price) {
@@ -29,7 +30,8 @@ export class ProductsController {
     }
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @Permissions('update-product')
+  @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Put(':id')
   updateProduct(@Param() params, @Req() request: Request): string {
     if (request?.body?.productName && request?.body?.price) {
@@ -38,15 +40,14 @@ export class ProductsController {
     }
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @Permissions('delete-product')
+  @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Delete(':id')
   deleteProduct(@Param() params): string {
     this.service.deleteProduct(params.id);
     return `This action delete a #${params.id} product`;
   }
 
-  @Permissions('read', 'create')
-  @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Get()
   getAllProducts(): Promise<Product[]> {
     return this.service.getProducts();

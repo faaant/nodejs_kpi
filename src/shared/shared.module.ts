@@ -11,10 +11,8 @@ import { JWTTokenService } from './jwt-key.service';
       secret: process.env.SECRET,
       signOptions: { expiresIn: '600s' },
     }),
-    UserPermissionsModule,
-    PermissionModule,
   ],
   providers: [JWTTokenService],
-  exports: [JWTTokenService, UserPermissionsModule, PermissionModule],
+  exports: [JWTTokenService],
 })
 export class SharedModule {}

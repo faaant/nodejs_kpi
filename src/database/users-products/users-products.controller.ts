@@ -8,7 +8,9 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { JWTTokenService } from 'src/shared/jwt-key.service';
+import { PermissionGuard } from '../../guards/permission.guard';
+import { Permissions } from '../../shared/decorators/permissions.decorator';
+import { JWTTokenService } from '../../shared/jwt-key.service';
 import { UsersProductsService } from './users-products.service';
 
 @Controller('list/products')
@@ -18,7 +20,8 @@ export class UsersProductsController {
     private jwtTokenService: JWTTokenService,
   ) {}
 
-  @UseGuards(AuthGuard('jwt'))
+  @Permissions('get-user-products')
+  @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Get()
   getUserProducts(@Request() req) {
     const body = this.jwtTokenService.decode(
@@ -30,19 +33,22 @@ export class UsersProductsController {
     return null;
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @Permissions('get-users-lists')
+  @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Get('/all')
   getAll() {
     return this.service.getAll();
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @Permissions('get-user-list')
+  @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Get(':id')
   get(@Param() params) {
     return this.service.getUserProducts(params.id);
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @Permissions('add-product-to-user-list')
+  @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Post(':id')
   addProduct(@Param() params, @Request() request) {
     if (request?.body?.productId) {
@@ -53,7 +59,8 @@ export class UsersProductsController {
     }
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @Permissions('delete-product-from-user-list')
+  @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Delete(':id')
   deleteProduct(@Param() params, @Request() request) {
     if (request?.body?.productId) {

@@ -4,19 +4,35 @@ import {
   Get,
   Param,
   Post,
-  Req,
+  Request,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { Request } from 'express';
+import { JWTTokenService } from 'src/shared/jwt-key.service';
+import { UserService } from 'src/user/users.service';
 import { UsersProductsService } from './users-products.service';
 
-@Controller('users-products')
+@Controller('list/products')
 export class UsersProductsController {
-  constructor(private service: UsersProductsService) {}
+  constructor(
+    private service: UsersProductsService,
+    private jwtTokenService: JWTTokenService,
+  ) {}
 
   @UseGuards(AuthGuard('jwt'))
   @Get()
+  getUserProducts(@Request() req) {
+    const body = this.jwtTokenService.decode(
+      req.headers['authorization'].split(' ')[1],
+    );
+    if (typeof body === 'object') {
+      return this.service.getUserProducts(body?.id);
+    }
+    return null;
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get('/all')
   getAll() {
     return this.service.getAll();
   }
@@ -29,7 +45,7 @@ export class UsersProductsController {
 
   @UseGuards(AuthGuard('jwt'))
   @Post(':id')
-  addProduct(@Param() params, @Req() request: Request) {
+  addProduct(@Param() params, @Request() request) {
     if (request?.body?.productId) {
       const userProduct = request.body;
       userProduct.userId = params.id;
@@ -40,7 +56,7 @@ export class UsersProductsController {
 
   @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
-  deleteProduct(@Param() params, @Req() request: Request) {
+  deleteProduct(@Param() params, @Request() request) {
     if (request?.body?.productId) {
       const userProduct = request.body;
       userProduct.userId = params.id;

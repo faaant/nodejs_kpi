@@ -14,13 +14,11 @@ export class UserPermissionsService {
     return await this.userPermissionsRepository.find();
   }
 
-  async getUserPermissions(userId: string): Promise<UserPermissions> {
-    return (
-      await this.userPermissionsRepository.find({
-        select: ['userId', 'permissionId'],
-        where: [{ userId }],
-      })
-    )[0];
+  async getUserPermissions(userId: string): Promise<UserPermissions[]> {
+    return await this.userPermissionsRepository.find({
+      select: ['permissionId'],
+      where: [{ userId }],
+    });
   }
 
   async deleteUserPermission(userPermission: UserPermissions) {

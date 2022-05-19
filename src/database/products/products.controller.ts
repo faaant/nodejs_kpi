@@ -12,7 +12,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
 import { PermissionGuard } from 'src/guards/permission.guard';
 
-import { Permissions } from '../shared/decorators/permissions.decorator';
+import { Permissions } from '../../shared/decorators/permissions.decorator';
 import { Product } from './products.entity';
 import { ProductsService } from './products.service';
 
@@ -45,6 +45,7 @@ export class ProductsController {
     return `This action delete a #${params.id} product`;
   }
 
+  @Permissions('read', 'create')
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Get()
   getAllProducts(): Promise<Product[]> {

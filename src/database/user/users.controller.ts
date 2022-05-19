@@ -13,12 +13,17 @@ import { AuthGuard } from '@nestjs/passport';
 
 import { UserService } from './users.service';
 import { Request } from 'express';
+import { User } from './user.entity';
+import { UserPermissionsService } from '../user-permissions/user-permissions.service';
 
 @Controller('users')
 export class UsersController {
-  constructor(private service: UserService) {}
+  constructor(
+    private service: UserService,
+    private userPermissionsService: UserPermissionsService,
+  ) {}
 
-  @UseGuards(AuthGuard('jwt'))
+  // @UseGuards(AuthGuard('jwt'))
   @Get()
   getAll() {
     return this.service.getUsers();
@@ -31,9 +36,13 @@ export class UsersController {
   }
 
   @Post()
-  create(@Req() request: Request) {
+  async create(@Req() request: Request) {
     if (request?.body?.username && request?.body?.password) {
-      this.service.createUser(request.body);
+      const user = new User();
+      user.username = request.body.username;
+      user.password = request.body.password;
+      await this.service.createUser(user);
+      this.userPermissionsService.addDefaultUserPermissions(user.id);
       return `This action create new user`;
     }
   }
@@ -42,8 +51,11 @@ export class UsersController {
   @Put()
   update(@Param() params, @Req() request: Request) {
     if (request?.body?.username && request?.body?.password) {
-      const user = request.body;
-      user.id = params.id;
+      const user = {
+        username: request.body.username,
+        password: request.body.password,
+        id: params.id,
+      };
       this.service.updateUser(user);
       return `This action update user`;
     }

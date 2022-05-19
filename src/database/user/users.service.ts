@@ -14,24 +14,22 @@ export class UserService {
   }
 
   async getUser(username: string): Promise<User> {
-    return (
-      await this.usersRepository.find({
-        select: ['id', 'username', 'password'],
-        where: [{ username }],
-      })
-    )[0];
+    return await this.usersRepository.find({
+      select: ['id', 'username', 'password'],
+      where: [{ username }],
+    })[0];
   }
 
   async updateUser(user: User) {
-    this.usersRepository.update(user.id, user);
+    await this.usersRepository.update(user.id, user);
   }
 
   async deleteUser(id: string) {
-    this.usersRepository.delete(id);
+    await this.usersRepository.delete(id);
   }
 
   async createUser(user: User) {
-    this.usersRepository.create(user);
-    this.usersRepository.save(user);
+    await this.usersRepository.create(user);
+    await this.usersRepository.save(user);
   }
 }

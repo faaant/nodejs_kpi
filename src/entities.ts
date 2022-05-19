@@ -1,8 +1,9 @@
-import { Product } from './products/products.entity';
-import { Role } from './role/role.entity';
-import { User } from './user/user.entity';
-import { UserProducts } from './users-products/users-products.entity';
+import { Permission } from './database/permissions/permissions.entity';
+import { Product } from './database/products/products.entity';
+import { UserPermissions } from './database/user-permissions/user-permissions.entity';
+import { User } from './database/user/user.entity';
+import { UserProducts } from './database/users-products/users-products.entity';
 
-const entities = [User, Role, Product, UserProducts];
+const entities = [User, Permission, Product, UserProducts, UserPermissions];
 
 export default entities;

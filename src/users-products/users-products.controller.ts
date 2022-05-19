@@ -9,7 +9,6 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { JWTTokenService } from 'src/shared/jwt-key.service';
-import { UserService } from 'src/user/users.service';
 import { UsersProductsService } from './users-products.service';
 
 @Controller('list/products')

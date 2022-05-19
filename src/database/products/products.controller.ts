@@ -42,7 +42,7 @@ export class ProductsController {
     return `This action delete a #${params.id} product`;
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  // @UseGuards(AuthGuard('jwt'))
   @Get()
   getAllProducts(): Promise<Product[]> {
     return this.service.getProducts();

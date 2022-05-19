@@ -4,17 +4,11 @@ import { Permission } from '../permissions/permissions.entity';
 @Entity()
 export class User {
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  id: string;
 
   @Column({ unique: true })
   username: string;
 
   @Column()
   password: string;
-
-  @Column('int', { default: 1 })
-  permissionId: number;
-
-  @OneToMany((type) => Permission, (permission) => permission)
-  permission: Permission;
 }

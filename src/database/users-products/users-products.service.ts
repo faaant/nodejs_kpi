@@ -2,6 +2,7 @@ import { Injectable, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserProducts } from './users-products.entity';
+import { UserProduct } from './users-products.interface';
 
 @Injectable()
 export class UsersProductsService {
@@ -31,12 +32,12 @@ export class UsersProductsService {
     });
   }
 
-  async addProduct(userProduct: UserProducts) {
+  async addProduct(userProduct: UserProduct) {
     this.pairsRepository.create(userProduct);
     this.pairsRepository.save(userProduct);
   }
 
-  async deleteProduct(userProduct: UserProducts) {
+  async deleteProduct(userProduct: UserProduct) {
     this.pairsRepository.delete(userProduct);
   }
 }

@@ -17,12 +17,14 @@ import { User } from './user.entity';
 import { UserPermissionsService } from '../user-permissions/user-permissions.service';
 import { PermissionGuard } from '../../guards/permission.guard';
 import { Permissions } from '../../shared/decorators/permissions.decorator';
+import { JWTTokenService } from 'src/shared/jwt-key.service';
 
 @Controller('users')
 export class UsersController {
   constructor(
     private service: UserService,
     private userPermissionsService: UserPermissionsService,
+    private jwtTokenService: JWTTokenService,
   ) {}
 
   @Permissions('get-users')
@@ -39,8 +41,6 @@ export class UsersController {
     return this.service.getUser(params.id);
   }
 
-  @Permissions('create-user')
-  @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Post()
   async create(@Req() request: Request) {
     if (request?.body?.username && request?.body?.password) {
@@ -56,7 +56,26 @@ export class UsersController {
   @Permissions('update-user')
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Put()
-  update(@Param() params, @Req() request: Request) {
+  update(@Req() request: Request) {
+    if (request?.body?.username && request?.body?.password) {
+      const jwtData = this.jwtTokenService.decode(
+        request.headers['authorization'].split(' ')[1],
+      );
+      if (typeof jwtData === 'object') {
+        const user = {
+          username: jwtData.username,
+          password: request.body.password,
+          id: jwtData.id,
+        };
+        this.service.updateUser(user);
+      }
+    }
+  }
+
+  @Permissions('update-certain-user')
+  @UseGuards(AuthGuard('jwt'), PermissionGuard)
+  @Put(':id')
+  updateCertainUser(@Param() params, @Req() request: Request) {
     if (request?.body?.username && request?.body?.password) {
       const user = {
         username: request.body.username,

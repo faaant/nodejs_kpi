@@ -1,6 +1,6 @@
 export const defaultPermissions: string[] = [
-  'read',
-  'update',
-  'create',
-  'delete',
+  'update-user',
+  'get-user-products',
+  'delete-user-product',
+  'add-user-product',
 ];

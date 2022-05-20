@@ -1,5 +1,18 @@
-import { Controller, Delete, Get, Param, Post, Put, Req } from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
+import { PermissionGuard } from '../../guards/permission.guard';
+
+import { Permissions } from '../../shared/decorators/permissions.decorator';
 import { Product } from './products.entity';
 import { ProductsService } from './products.service';
 
@@ -7,6 +20,8 @@ import { ProductsService } from './products.service';
 export class ProductsController {
   constructor(private service: ProductsService) {}
 
+  @Permissions('create-product')
+  @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Post()
   createProduct(@Req() request: Request) {
     if (request?.body?.productName && request?.body?.price) {
@@ -15,6 +30,8 @@ export class ProductsController {
     }
   }
 
+  @Permissions('update-product')
+  @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Put(':id')
   updateProduct(@Param() params, @Req() request: Request): string {
     if (request?.body?.productName && request?.body?.price) {
@@ -23,6 +40,8 @@ export class ProductsController {
     }
   }
 
+  @Permissions('delete-product')
+  @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Delete(':id')
   deleteProduct(@Param() params): string {
     this.service.deleteProduct(params.id);

@@ -14,7 +14,7 @@ import { JWTTokenService } from '../../shared/jwt-key.service';
 import { UserProducts } from './users-products.entity';
 import { UsersProductsService } from './users-products.service';
 
-@Controller('products')
+@Controller('list/products')
 export class UsersProductsController {
   constructor(
     private service: UsersProductsService,
@@ -90,27 +90,20 @@ export class UsersProductsController {
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Post(':id')
   addUserProduct(@Param() params, @Request() request) {
-    if (request?.body?.productId) {
-      const userProduct = request.body;
-      userProduct.userId = params.id;
-      this.service.addProduct(request.body);
-      return `This action add new product to the list`;
-    }
+    const userProduct = request.body;
+    userProduct.userId = params.id;
+    this.service.addProduct(request.body);
+    return `This action add new product to the list`;
   }
 
   @Permissions(`delete-product-from-certain-user`)
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Delete(':id')
   deleteUserProduct(@Param() params, @Request() request) {
-    if (request?.body?.productId) {
-      const userProduct = request.body;
-      userProduct.userId = params.id;
-      const id = this.service.getUserProductId(
-        params.id,
-        request.body.productId,
-      );
-      this.service.deleteProduct(userProduct);
-      return `This action delete product from user's list`;
-    }
+    const userProduct = request.body;
+    userProduct.userId = params.id;
+    const id = this.service.getUserProductId(params.id, request.body.productId);
+    this.service.deleteProduct(userProduct);
+    return `This action delete product from user's list`;
   }
 }

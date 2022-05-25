@@ -1,7 +1,6 @@
 import {
   Controller,
   Post,
-  Body,
   Get,
   Put,
   Delete,
@@ -43,14 +42,12 @@ export class UsersController {
 
   @Post()
   async create(@Req() request: Request) {
-    if (request?.body?.username && request?.body?.password) {
-      const user = new User();
-      user.username = request.body.username;
-      user.password = request.body.password;
-      await this.service.createUser(user);
-      this.userPermissionsService.addDefaultUserPermissions(user.id);
-      return `This action create new user`;
-    }
+    const user = new User();
+    user.username = request.body.username;
+    user.password = request.body.password;
+    await this.service.createUser(user);
+    this.userPermissionsService.addDefaultUserPermissions(user.id);
+    return `This action create new user`;
   }
 
   @Permissions('update-user')
@@ -62,11 +59,9 @@ export class UsersController {
         request.headers['authorization'].split(' ')[1],
       );
       if (typeof jwtData === 'object') {
-        const user = {
-          username: jwtData.username,
-          password: request.body.password,
-          id: jwtData.id,
-        };
+        const user = new User();
+        user.username = jwtData.username;
+        user.id = jwtData.id;
         this.service.updateUser(user);
       }
     }
@@ -76,15 +71,9 @@ export class UsersController {
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Put(':id')
   updateCertainUser(@Param() params, @Req() request: Request) {
-    if (request?.body?.username && request?.body?.password) {
-      const user = {
-        username: request.body.username,
-        password: request.body.password,
-        id: params.id,
-      };
-      this.service.updateUser(user);
-      return `This action update user`;
-    }
+    request.body.id = params.id;
+    this.service.updateUser(request.body);
+    return `This action update user`;
   }
 
   @Permissions('delete-user')

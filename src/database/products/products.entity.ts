@@ -10,4 +10,10 @@ export class Product {
 
   @Column()
   price: number;
+
+  @Column()
+  weight: number;
+
+  @Column()
+  count: number;
 }

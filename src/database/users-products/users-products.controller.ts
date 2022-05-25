@@ -8,11 +8,12 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { PermissionGuard } from '../../guards/permission.guard';
-import { Permissions } from '../../shared/decorators/permissions.decorator';
-import { JWTTokenService } from '../../shared/jwt-key.service';
-import { UserProducts } from './users-products.entity';
-import { UsersProductsService } from './users-products.service';
+
+import { PermissionGuard } from '@guards/permission.guard';
+import { Permissions } from '@shared/decorators/permissions.decorator';
+import { JWTTokenService } from '@shared/jwt-token.service';
+import { UserProducts } from '@users-products/users-products.entity';
+import { UsersProductsService } from '@users-products/users-products.service';
 
 @Controller('list/products')
 export class UsersProductsController {

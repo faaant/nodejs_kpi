@@ -1,7 +1,8 @@
-import { IsNotEmpty } from 'class-validator';
-import { Permission } from 'src/database/permissions/permissions.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { User } from '../user/user.entity';
+import { IsNotEmpty } from 'class-validator';
+
+import { User } from '@user/user.entity';
+import { Permission } from '@permissions/permissions.entity';
 
 @Entity()
 export class UserPermissions {

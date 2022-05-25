@@ -8,9 +8,9 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { PermissionGuard } from '../../guards/permission.guard';
-import { Permissions } from '../../shared/decorators/permissions.decorator';
-import { UserPermissionsService } from './user-permissions.service';
+import { PermissionGuard } from '@guards/permission.guard';
+import { Permissions } from '@shared/decorators/permissions.decorator';
+import { UserPermissionsService } from '@user-permissions/user-permissions.service';
 
 @Controller('user-permissions')
 export class UserPermissionsController {

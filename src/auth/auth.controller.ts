@@ -1,6 +1,6 @@
 import { Controller, Request, Post, UseGuards, Response } from '@nestjs/common';
-import { JWTTokenService } from 'src/shared/jwt-key.service';
-import { AuthService } from './auth.service';
+import { JWTTokenService } from '@shared/jwt-token.service';
+import { AuthService } from '@auth/auth.service';
 
 @Controller('auth')
 export class AuthController {

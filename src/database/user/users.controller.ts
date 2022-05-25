@@ -10,13 +10,12 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
-import { UserService } from './users.service';
-import { Request } from 'express';
-import { User } from './user.entity';
-import { UserPermissionsService } from '../user-permissions/user-permissions.service';
-import { PermissionGuard } from '../../guards/permission.guard';
-import { Permissions } from '../../shared/decorators/permissions.decorator';
-import { JWTTokenService } from 'src/shared/jwt-key.service';
+import { UserService } from '@user/users.service';
+import { User } from '@user/user.entity';
+import { UserPermissionsService } from '@user-permissions/user-permissions.service';
+import { PermissionGuard } from '@guards/permission.guard';
+import { Permissions } from '@shared/decorators/permissions.decorator';
+import { JWTTokenService } from '@shared/jwt-token.service';
 
 @Controller('users')
 export class UsersController {
@@ -41,10 +40,10 @@ export class UsersController {
   }
 
   @Post()
-  async create(@Req() request: Request) {
+  async create(@Req() request) {
     const user = new User();
-    user.username = request.body.username;
-    user.password = request.body.password;
+    user.username = request.body?.username;
+    user.password = request.body?.password;
     await this.service.createUser(user);
     this.userPermissionsService.addDefaultUserPermissions(user.id);
     return `This action create new user`;
@@ -53,7 +52,7 @@ export class UsersController {
   @Permissions('update-user')
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Put()
-  update(@Req() request: Request) {
+  update(@Req() request) {
     if (request?.body?.username && request?.body?.password) {
       const jwtData = this.jwtTokenService.decode(
         request.headers['authorization'].split(' ')[1],
@@ -70,7 +69,7 @@ export class UsersController {
   @Permissions('update-certain-user')
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Put(':id')
-  updateCertainUser(@Param() params, @Req() request: Request) {
+  updateCertainUser(@Param() params, @Req() request) {
     request.body.id = params.id;
     this.service.updateUser(request.body);
     return `This action update user`;

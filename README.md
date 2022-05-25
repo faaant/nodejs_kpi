@@ -1,4 +1,9 @@
 # Store
+## Description
+<p>
+  This is a back-end for the online store, the main product of which is different electronic devices.
+</p>
+
 ## Tech stack
 <ol>
   <li>Nest</li>

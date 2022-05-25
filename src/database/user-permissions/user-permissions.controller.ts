@@ -29,18 +29,14 @@ export class UserPermissionsController {
   @UseGuards(AuthGuard('jwt'))
   @Post(':id')
   addUserPermission(@Param() params, @Request() request) {
-    if (request?.body?.permissionId) {
-      request.body.userId = params.id;
-      this.service.addUserPermission(request.body);
-    }
+    request.body.userId = params.id;
+    this.service.addUserPermission(request.body);
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
   deleteProduct(@Param() params, @Request() request) {
-    if (request?.body?.permissionId) {
-      request.body.userId = params.id;
-      this.service.deleteUserPermission(request.body);
-    }
+    request.body.userId = params.id;
+    this.service.deleteUserPermission(request.body);
   }
 }

@@ -6,7 +6,7 @@ export class Product {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ unique: true })
   @IsNotEmpty({
     message: 'Product name must be not empty',
   })

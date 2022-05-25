@@ -45,26 +45,19 @@ export class UsersProductsController {
   @UseGuards(AuthGuard('jwt'))
   @Post(':id')
   addProduct(@Param() params, @Request() request) {
-    if (request?.body?.productId) {
-      const userProduct = request.body;
-      userProduct.userId = params.id;
-      this.service.addProduct(request.body);
-      return `This action add new product to the list`;
-    }
+    const userProduct = request.body;
+    userProduct.userId = params.id;
+    this.service.addProduct(request.body);
+    return `This action add new product to the list`;
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
   deleteProduct(@Param() params, @Request() request) {
-    if (request?.body?.productId) {
-      const userProduct = request.body;
-      userProduct.userId = params.id;
-      const id = this.service.getUserProductId(
-        params.id,
-        request.body.productId,
-      );
-      this.service.deleteProduct(userProduct);
-      return `This action delete product from user's list`;
-    }
+    const userProduct = request.body;
+    userProduct.userId = params.id;
+    const id = this.service.getUserProductId(params.id, request.body.productId);
+    this.service.deleteProduct(userProduct);
+    return `This action delete product from user's list`;
   }
 }

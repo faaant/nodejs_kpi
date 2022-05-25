@@ -23,7 +23,7 @@ export class UsersController {
     private userPermissionsService: UserPermissionsService,
   ) {}
 
-  // @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'))
   @Get()
   getAll() {
     return this.service.getUsers();
@@ -37,28 +37,20 @@ export class UsersController {
 
   @Post()
   async create(@Req() request: Request) {
-    if (request?.body?.username && request?.body?.password) {
-      const user = new User();
-      user.username = request.body.username;
-      user.password = request.body.password;
-      await this.service.createUser(user);
-      this.userPermissionsService.addDefaultUserPermissions(user.id);
-      return `This action create new user`;
-    }
+    const user = new User();
+    user.username = request.body.username;
+    user.password = request.body.password;
+    await this.service.createUser(user);
+    this.userPermissionsService.addDefaultUserPermissions(user.id);
+    return `This action create new user`;
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Put()
   update(@Param() params, @Req() request: Request) {
-    if (request?.body?.username && request?.body?.password) {
-      const user = {
-        username: request.body.username,
-        password: request.body.password,
-        id: params.id,
-      };
-      // this.service.updateUser(user);
-      return `This action update user`;
-    }
+    request.body.id = params.id;
+    this.service.updateUser(request.body);
+    return `This action update user`;
   }
 
   @UseGuards(AuthGuard('jwt'))

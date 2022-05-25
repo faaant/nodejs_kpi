@@ -14,11 +14,11 @@ export class PermissionsService {
     return await this.permissionsRepository.find();
   }
 
-  async getUser(username: string): Promise<Permission> {
+  async getPermission(id: number): Promise<Permission> {
     return (
       await this.permissionsRepository.find({
         select: ['id', 'permission'],
-        where: [{ username }],
+        where: [{ id }],
       })
     )[0];
   }

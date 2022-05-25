@@ -20,19 +20,16 @@ export class ProductsController {
   @UseGuards(AuthGuard('jwt'))
   @Post()
   createProduct(@Req() request: Request) {
-    if (request?.body?.productName && request?.body?.price) {
-      this.service.createProduct(request.body);
-      return `This action create a product`;
-    }
+    this.service.createProduct(request.body);
+    return `This action create a product`;
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Put(':id')
   updateProduct(@Param() params, @Req() request: Request): string {
-    if (request?.body?.productName && request?.body?.price) {
-      this.service.updateProduct(request.body);
-      return `This action update a #${params.id} product`;
-    }
+    request.body.id = params.id;
+    this.service.updateProduct(request.body);
+    return `This action update a #${params.id} product`;
   }
 
   @UseGuards(AuthGuard('jwt'))

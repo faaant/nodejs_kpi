@@ -10,11 +10,11 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
-import { PermissionGuard } from '../../guards/permission.guard';
+import { PermissionGuard } from '@guards/permission.guard';
 
-import { Permissions } from '../../shared/decorators/permissions.decorator';
-import { Product } from './products.entity';
-import { ProductsService } from './products.service';
+import { Permissions } from '@shared/decorators/permissions.decorator';
+import { Product } from '@products/products.entity';
+import { ProductsService } from '@products/products.service';
 
 @Controller('products')
 export class ProductsController {

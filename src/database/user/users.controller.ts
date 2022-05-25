@@ -56,7 +56,7 @@ export class UsersController {
         password: request.body.password,
         id: params.id,
       };
-      this.service.updateUser(user);
+      // this.service.updateUser(user);
       return `This action update user`;
     }
   }

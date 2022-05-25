@@ -4,7 +4,7 @@ import {
   Get,
   Param,
   Post,
-  Request,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
@@ -12,7 +12,6 @@ import { AuthGuard } from '@nestjs/passport';
 import { PermissionGuard } from '@guards/permission.guard';
 import { Permissions } from '@shared/decorators/permissions.decorator';
 import { JWTTokenService } from '@shared/jwt-token.service';
-import { UserProducts } from '@users-products/users-products.entity';
 import { UsersProductsService } from '@users-products/users-products.service';
 
 @Controller('list/products')
@@ -32,7 +31,7 @@ export class UsersProductsController {
   @Permissions('get-user-products')
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Get()
-  getProducts(@Request() req) {
+  getProducts(@Req() req) {
     const body = this.jwtTokenService.decode(
       req.headers['authorization'].split(' ')[1],
     );
@@ -45,7 +44,7 @@ export class UsersProductsController {
   @Permissions('delete-user-product')
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Delete()
-  deleteProduct(@Request() request) {
+  deleteProduct(@Req() request) {
     if (request?.body?.productId) {
       const jwtData = this.jwtTokenService.decode(
         request.headers['authorization'].split(' ')[1],
@@ -64,7 +63,7 @@ export class UsersProductsController {
   @Permissions(`add-user-product`)
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Post()
-  addProduct(@Request() request) {
+  addProduct(@Req() request) {
     if (request?.body?.productId) {
       const jwtData = this.jwtTokenService.decode(
         request.headers['authorization'].split(' ')[1],
@@ -90,7 +89,7 @@ export class UsersProductsController {
   @Permissions(`add-product-to-certain-user`)
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Post(':id')
-  addUserProduct(@Param() params, @Request() request) {
+  addUserProduct(@Param() params, @Req() request) {
     const userProduct = request.body;
     userProduct.userId = params.id;
     this.service.addProduct(request.body);
@@ -100,7 +99,7 @@ export class UsersProductsController {
   @Permissions(`delete-product-from-certain-user`)
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Delete(':id')
-  deleteUserProduct(@Param() params, @Request() request) {
+  deleteUserProduct(@Param() params, @Req() request) {
     const userProduct = request.body;
     userProduct.userId = params.id;
     const id = this.service.getUserProductId(params.id, request.body.productId);

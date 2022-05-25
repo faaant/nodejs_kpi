@@ -4,7 +4,7 @@ import {
   Get,
   Param,
   Post,
-  Request,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
@@ -33,7 +33,7 @@ export class UserPermissionsController {
   @Permissions('add-user-permission')
   @UseGuards(AuthGuard('jwt'))
   @Post(':id')
-  addUserPermission(@Param() params, @Request() request) {
+  addUserPermission(@Param() params, @Req() request) {
     request.body.userId = params.id;
     this.service.addUserPermission(request.body);
   }
@@ -41,7 +41,7 @@ export class UserPermissionsController {
   @Permissions('delete-user-permission')
   @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
-  deleteProduct(@Param() params, @Request() request) {
+  deleteProduct(@Param() params, @Req() request) {
     request.body.userId = params.id;
     this.service.deleteUserPermission(request.body);
   }

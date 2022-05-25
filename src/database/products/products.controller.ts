@@ -9,9 +9,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { Request } from 'express';
-import { PermissionGuard } from '@guards/permission.guard';
 
+import { PermissionGuard } from '@guards/permission.guard';
 import { Permissions } from '@shared/decorators/permissions.decorator';
 import { Product } from '@products/products.entity';
 import { ProductsService } from '@products/products.service';
@@ -23,7 +22,7 @@ export class ProductsController {
   @Permissions('create-product')
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Post()
-  createProduct(@Req() request: Request) {
+  createProduct(@Req() request) {
     this.service.createProduct(request.body);
     return `This action create a product`;
   }
@@ -31,7 +30,7 @@ export class ProductsController {
   @Permissions('update-product')
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Put(':id')
-  updateProduct(@Param() params, @Req() request: Request): string {
+  updateProduct(@Param() params, @Req() request): string {
     request.body.id = params.id;
     this.service.updateProduct(request.body);
     return `This action update a #${params.id} product`;

@@ -1,5 +1,5 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
-import { JWTTokenService } from './shared/jwt-token.service';
+import { JWTTokenService } from '@shared/jwt-token.service';
 
 @Injectable()
 export class JwtinsertionMiddleware implements NestMiddleware {

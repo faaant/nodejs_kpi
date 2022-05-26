@@ -22,7 +22,14 @@ export class UserService {
     )[0];
   }
 
-  async updateUser(user: User) {
+  async updateUser(body) {
+    const user = {
+      id: body?.id,
+      username: body?.username,
+      password: body?.password,
+      email: body?.email ?? null,
+      phone: body?.phone ?? null,
+    };
     await this.usersRepository.update(user.id, user);
   }
 
@@ -30,8 +37,21 @@ export class UserService {
     await this.usersRepository.delete(id);
   }
 
-  async createUser(user: User) {
+  async createUser(body) {
+    if (!this.validateUser(body)) {
+      throw 'Not all fields are filled';
+    }
+    const user = {
+      username: body?.username,
+      password: body?.password,
+      email: body?.email ?? null,
+      phone: body?.phone ?? null,
+    };
     await this.usersRepository.create(user);
     await this.usersRepository.save(user);
+  }
+
+  validateUser(body) {
+    return body?.username && body?.password;
   }
 }

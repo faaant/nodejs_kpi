@@ -39,7 +39,6 @@ export class UserPermissionsService {
   }
 
   async getAllPermissions(): Promise<UserPermissions[]> {
-    console.log();
     return await this.userPermissionsRepository.find();
   }
 
@@ -50,12 +49,30 @@ export class UserPermissionsService {
     });
   }
 
-  async deleteUserPermission(userPermission: UserPermissions) {
+  async deleteUserPermission(body) {
+    if (!this.validatePermission(body)) {
+      throw 'Not all fields are filled';
+    }
+    const userPermission = {
+      userId: body.userId,
+      permissionId: body.permissionId,
+    };
     this.userPermissionsRepository.delete(userPermission);
   }
 
-  async addUserPermission(newUserPermission: UserPermissions) {
-    this.userPermissionsRepository.create(newUserPermission);
-    this.userPermissionsRepository.save(newUserPermission);
+  async addUserPermission(body) {
+    if (!this.validatePermission(body)) {
+      throw 'Not all fields are filled';
+    }
+    const userPermission = {
+      userId: body.userId,
+      permissionId: body.permissionId,
+    };
+    this.userPermissionsRepository.create(userPermission);
+    this.userPermissionsRepository.save(userPermission);
+  }
+
+  validatePermission(body) {
+    return body?.permissionId && body?.userId;
   }
 }

@@ -5,6 +5,7 @@ import {
   Param,
   Post,
   Req,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
@@ -14,35 +15,67 @@ import { UserPermissionsService } from '@user-permissions/user-permissions.servi
 
 @Controller('user-permissions')
 export class UserPermissionsController {
-  constructor(private service: UserPermissionsService) {}
+  constructor(private userPermissionsService: UserPermissionsService) {}
 
   @Permissions('get-permissions-list')
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Get()
-  getAll() {
-    return this.service.getAllPermissions();
+  getAll(@Res() res) {
+    return this.userPermissionsService.getAllPermissions().catch(() => {
+      return res.status(500).json({
+        message: 'Fail to get users and their permissions',
+      });
+    });
   }
 
   @Permissions('get-user-permissions')
   @UseGuards(AuthGuard('jwt'))
   @Get(':id')
-  getUserPermissions(@Param() params) {
-    this.service.getUserPermissions(params.id);
+  getUserPermissions(@Param() params, @Res() res) {
+    this.userPermissionsService.getUserPermissions(params.id).catch(() => {
+      return res.status(500).json({
+        message: 'Fail to get user permissions',
+      });
+    });
   }
 
   @Permissions('add-user-permission')
   @UseGuards(AuthGuard('jwt'))
   @Post(':id')
-  addUserPermission(@Param() params, @Req() request) {
+  addUserPermission(@Param() params, @Req() request, @Res() res) {
     request.body.userId = params.id;
-    this.service.addUserPermission(request.body);
+    this.userPermissionsService
+      .addUserPermission(request.body)
+      .then(() => {
+        return res.status(200).json({
+          message: 'User permission added',
+        });
+      })
+      .catch((error) => {
+        const statusCode = error?.message ? 400 : 500;
+        return res.status(statusCode).json({
+          message: error?.message ?? 'Fail to add user permission',
+        });
+      });
   }
 
   @Permissions('delete-user-permission')
   @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
-  deleteProduct(@Param() params, @Req() request) {
+  deleteUserPermission(@Param() params, @Req() request, @Res() res) {
     request.body.userId = params.id;
-    this.service.deleteUserPermission(request.body);
+    this.userPermissionsService
+      .deleteUserPermission(request.body)
+      .then(() => {
+        return res.status(200).json({
+          message: 'User permission deleted',
+        });
+      })
+      .catch((error) => {
+        const statusCode = error?.message ? 400 : 500;
+        return res.status(statusCode).json({
+          message: error?.message ?? 'Fail to delete user permission',
+        });
+      });
   }
 }

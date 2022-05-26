@@ -11,10 +11,9 @@ export class LoggerMiddleware implements NestMiddleware {
 
     response.on('finish', () => {
       const { statusCode } = response;
-      const contentLength = response.get('content-length');
       if (statusCode >= 500) {
         this.logger.error(
-          `${method} ${originalUrl} ${statusCode} ${contentLength} - ${userAgent} ${ip}`,
+          `${method} ${originalUrl} ${statusCode} - ${userAgent} ${ip}`,
         );
         return;
       }

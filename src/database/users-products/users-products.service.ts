@@ -32,12 +32,26 @@ export class UsersProductsService {
     });
   }
 
-  async addProduct(userProduct: UserProduct) {
+  async addProduct(body) {
+    if (body?.userId && body?.productId) {
+      throw 'Not all fields are filled';
+    }
+    const userProduct = {
+      userId: body?.userId,
+      productId: body?.productId,
+    };
     this.pairsRepository.create(userProduct);
     this.pairsRepository.save(userProduct);
   }
 
-  async deleteProduct(userProduct: UserProduct) {
+  async deleteProduct(body) {
+    if (body?.userId && body?.productId) {
+      throw 'Not all fields are filled';
+    }
+    const userProduct = {
+      userId: body?.userId,
+      productId: body?.productId,
+    };
     this.pairsRepository.delete(userProduct);
   }
 }

@@ -8,11 +8,12 @@ import entities from './entities';
 import { PermissionModule } from '@permissions/permissions.module';
 import { AuthModule } from '@auth/auth.module';
 import { SharedModule } from '@shared/shared.module';
-import { JwtinsertionMiddleware } from './jwtinsertion.middleware';
+import { JwtinsertionMiddleware } from './middlewares/jwt-insertion.middleware';
 import { UsersModule } from '@user/users.module';
 import { UsersProductsModule } from '@users-products/users-products.module';
 import { ProductsModule } from '@products/products.module';
 import { UserPermissionsModule } from '@user-permissions/user-permissions.module';
+import { LoggerMiddleware } from 'middlewares/logger.middleware';
 
 @Module({
   imports: [
@@ -41,5 +42,6 @@ import { UserPermissionsModule } from '@user-permissions/user-permissions.module
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(JwtinsertionMiddleware).exclude('auth/(.*)').forRoutes('*');
+    consumer.apply(LoggerMiddleware).forRoutes('*');
   }
 }

@@ -26,9 +26,9 @@ export class User {
 
   @Column({ default: null })
   @IsEmail({ message: 'Check if email is correct' })
-  email: string;
+  email?: string;
 
   @Column({ default: null })
   @Length(9, 12, { message: 'Check phone number for correctness' })
-  phone: string;
+  phone?: string;
 }

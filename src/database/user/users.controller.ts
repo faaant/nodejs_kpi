@@ -30,29 +30,45 @@ export class UsersController {
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Get()
   getAll(@Res() res) {
-    return this.userService.getUsers().catch((err) => {
-      return res.status(500).json({
-        message: err?.message ?? 'Fail to get all users',
+    return this.userService
+      .getUsers()
+      .then((data) => {
+        return res.status(200).json(data);
+      })
+      .catch((err) => {
+        return res.status(500).json({
+          message: err?.message ?? 'Fail to get all users',
+        });
       });
-    });
   }
 
   @Permissions('get-user')
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Get(':id')
   get(@Param() params, @Res() res) {
-    return this.userService.getUser(params.id).catch((err) => {
-      return res.status(500).json({
-        message: err?.message ?? 'Fail to get user',
+    return this.userService
+      .getUserById(params.id)
+      .then((data) => {
+        return res.status(200).json(data);
+      })
+      .catch((err) => {
+        return res.status(500).json({
+          message: err?.message ?? 'Fail to get user',
+        });
       });
-    });
   }
 
   @Post()
   async create(@Req() req, @Res() res) {
     try {
-      await this.userService.createUser(req.body);
-      const user = await this.userService.getUser(req.body?.username);
+      const user = new User();
+      user.username = req.body?.username;
+      user.password = req.body?.password;
+      user.phone = req.body?.phone;
+      user.email = req.body?.email;
+      console.log(req.body);
+      await this.userService.createUser(user);
+      // const newUser = await this.userService.getUser(req.body?.username);
       await this.userPermissionsService.addDefaultUserPermissions(user.id);
       return res.status(200).json({
         message: 'User created succesfuly',
@@ -60,7 +76,7 @@ export class UsersController {
     } catch (error) {
       const statusCode = error?.message ? 400 : 500;
       return res.status(statusCode).json({
-        message: 'Fail to create user',
+        message: error?.message ?? 'Fail to create user',
       });
     }
   }
@@ -68,23 +84,26 @@ export class UsersController {
   @Permissions('update-user')
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Put()
-  update(@Req() request, @Res() res) {
+  async update(@Req() request, @Res() res) {
     const jwtData = this.jwtTokenService.decode(
       request.headers['authorization'].split(' ')[1],
     );
     if (typeof jwtData === 'object') {
-      request.body.username = jwtData.username;
-      request.body.id = jwtData.id;
+      const user: User = await this.userService.getUser(jwtData.username);
+      user.username = request?.body?.username ?? jwtData.username;
+      user.password = request?.body?.password ?? user.password;
+      user.phone = request?.body?.phone ?? user.phone;
+      user.username = request?.body?.email ?? user.email;
       this.userService
-        .updateUser(request.body)
+        .updateUser(user)
         .then(() => {
           return res.status(200).json({
             message: 'User updated',
           });
         })
-        .catch(() => {
+        .catch((error) => {
           return res.status(500).json({
-            message: 'Fail to update user',
+            message: error?.message ?? 'Fail to update user',
           });
         });
     }
@@ -112,7 +131,8 @@ export class UsersController {
   @Permissions('delete-user')
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Delete(':id')
-  deleteUser(@Param() params, @Res() res) {
+  async deleteUser(@Param() params, @Res() res) {
+    await this.userPermissionsService.deleteAllPermissions(params.id);
     return this.userService
       .deleteUser(params.id)
       .then(() => {
@@ -120,7 +140,7 @@ export class UsersController {
           message: 'User deleted',
         });
       })
-      .catch(() => {
+      .catch((error) => {
         return res.status(500).json({
           message: 'Fail to delete user',
         });

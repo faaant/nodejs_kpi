@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { Product } from '@products/products.entity';
+import { validate } from 'class-validator';
 
 @Injectable()
 export class ProductsService {
@@ -14,16 +15,19 @@ export class ProductsService {
     return await this.productsRepository.find();
   }
 
-  async getProduct(_id: string): Promise<Product[]> {
-    return await this.productsRepository.find({
-      select: ['id', 'productName', 'price'],
-      where: [{ id: _id }],
-    });
+  async getProduct(_id: string): Promise<Product> {
+    return (
+      await this.productsRepository.find({
+        select: ['id', 'productName', 'price'],
+        where: [{ id: _id }],
+      })
+    )[0];
   }
 
   async updateProduct(product: Product) {
-    if (!this.validateProduct(product)) {
-      throw { message: 'Not all fields are filled' };
+    const error = await validate(product);
+    if (error.length > 0) {
+      throw { message: 'Data is incorrect.' };
     }
     this.productsRepository.update(product.id, product);
   }
@@ -32,21 +36,13 @@ export class ProductsService {
     this.productsRepository.delete(id);
   }
 
-  async createProduct(body: Product) {
-    if (!this.validateProduct(body)) {
-      throw { message: 'Not all fields are filled' };
+  async createProduct(product: Product) {
+    const error = await validate(product);
+    console.log(error);
+    if (error.length > 0) {
+      throw { message: 'Data is incorrect.' };
     }
-    const product = {
-      productName: body?.productName,
-      price: body?.price,
-      weight: body?.weight,
-      count: body?.count,
-    };
     this.productsRepository.create(product);
     this.productsRepository.save(product);
-  }
-
-  public validateProduct(body: any) {
-    return body?.productName && body?.price && body?.weight && body?.count;
   }
 }

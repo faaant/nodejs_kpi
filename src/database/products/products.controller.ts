@@ -24,8 +24,13 @@ export class ProductsController {
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Post()
   createProduct(@Req() req, @Res() res) {
+    const product = new Product();
+    product.productName = req.body?.productName;
+    product.price = Number(req.body?.price);
+    product.weight = Number(req.body?.weight);
+    product.count = Number(req.body?.count);
     this.productsService
-      .createProduct(req.body)
+      .createProduct(product)
       .then(() => {
         return res.status(200).json({
           message: 'Product created',
@@ -42,10 +47,14 @@ export class ProductsController {
   @Permissions('update-product')
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Put(':id')
-  updateProduct(@Param() params, @Req() request, @Res() res): void {
-    request.body.id = params.id;
+  async updateProduct(@Param() params, @Req() req, @Res() res) {
+    const product: Product = await this.productsService.getProduct(params.id);
+    product.productName = req.body?.productName ?? product.productName;
+    product.price = Number(req.body?.price) ?? product.price;
+    product.weight = Number(req.body?.weight) ?? product.weight;
+    product.count = Number(req.body?.count) ?? product.count;
     this.productsService
-      .updateProduct(request.body)
+      .updateProduct(product)
       .then(() => {
         return res.status(200).json({
           message: 'Product updated',
@@ -79,10 +88,15 @@ export class ProductsController {
 
   @Get()
   getAllProducts(@Res() res): Promise<Product[]> {
-    return this.productsService.getProducts().catch((err) => {
-      return res.status(500).json({
-        message: err?.message ?? 'Fail to get all products',
+    return this.productsService
+      .getProducts()
+      .then((data) => {
+        res.status(200).json(data);
+      })
+      .catch((err) => {
+        return res.status(500).json({
+          message: err?.message ?? 'Fail to get all products',
+        });
       });
-    });
   }
 }

@@ -4,7 +4,10 @@ import { Repository } from 'typeorm';
 
 import { Permission } from '@permissions/permissions.entity';
 import { PermissionsService } from '@permissions/permissions.service';
-import { defaultPermissions } from '@user-permissions/user-permissions-constants';
+import {
+  adminPermissions,
+  defaultPermissions,
+} from '@user-permissions/user-permissions-constants';
 import { UserPermissions } from '@user-permissions/user-permissions.entity';
 
 @Injectable()
@@ -30,7 +33,27 @@ export class UserPermissionsService {
     );
 
     newUserPermissions.forEach((newUserPermission) => {
-      console.log(newUserPermission);
+      if (newUserPermission) {
+        this.userPermissionsRepository.create(newUserPermission);
+        this.userPermissionsRepository.save(newUserPermission);
+      }
+    });
+  }
+
+  async addAdminPermissions(userId: string) {
+    const permissions: Permission[] =
+      await this.permissionsService.getPermissions();
+    const adminUserPermissions: UserPermissions[] = permissions.map(
+      (permission) => {
+        if (adminPermissions.indexOf(permission.permission) != -1) {
+          const newUserPermission = new UserPermissions();
+          newUserPermission.permissionId = permission.id;
+          newUserPermission.userId = userId;
+          return newUserPermission;
+        }
+      },
+    );
+    adminUserPermissions.forEach((newUserPermission) => {
       if (newUserPermission) {
         this.userPermissionsRepository.create(newUserPermission);
         this.userPermissionsRepository.save(newUserPermission);
@@ -58,6 +81,10 @@ export class UserPermissionsService {
       permissionId: body.permissionId,
     };
     this.userPermissionsRepository.delete(userPermission);
+  }
+
+  async deleteAllPermissions(userId: string) {
+    await this.userPermissionsRepository.delete({ userId });
   }
 
   async addUserPermission(body) {

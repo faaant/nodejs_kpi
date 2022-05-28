@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { HttpModule } from '@nestjs/axios';
 import { ProductsModule } from '@products/products.module';
 
 import { UsersModule } from '@users/users.module';
@@ -9,6 +10,7 @@ import entities from './entities';
 
 @Module({
   imports: [
+    HttpModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',

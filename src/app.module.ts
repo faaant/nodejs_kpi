@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ProductsModule } from '@products/products.module';
 
 import { UsersModule } from '@users/users.module';
 import { AppController } from './app.controller';
@@ -19,6 +20,7 @@ import entities from './entities';
       synchronize: true,
     }),
     UsersModule,
+    ProductsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

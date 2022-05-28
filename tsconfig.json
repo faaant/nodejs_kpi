@@ -11,7 +11,8 @@
     "outDir": "./dist",
     "baseUrl": "src",
     "paths": {
-      "@users/*": ["database/users/*"]
+      "@users/*": ["database/users/*"],
+      "@products/*": ["database/products/*"]
     },
     "incremental": true,
     "skipLibCheck": true,

@@ -2,11 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '@users/user.entity';
+import { UserPermissionsService } from '@user-permissions/user-permissions.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private usersRepository: Repository<User>,
+    private userPermissionsService: UserPermissionsService,
   ) {}
 
   async getUsers(): Promise<User[]> {
@@ -42,5 +44,6 @@ export class UsersService {
   async createUser(user: User) {
     await this.usersRepository.create(user);
     await this.usersRepository.save(user);
+    await this.userPermissionsService.addDefaultUserPermissions(user.id);
   }
 }

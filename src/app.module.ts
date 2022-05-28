@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { HttpModule } from '@nestjs/axios';
-import { ProductsModule } from '@products/products.module';
 
+import { ProductsModule } from '@products/products.module';
 import { UsersModule } from '@users/users.module';
+import { UsersProductsModule } from '@users-products/users-products.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import entities from './entities';
@@ -23,6 +24,7 @@ import entities from './entities';
     }),
     UsersModule,
     ProductsModule,
+    UsersProductsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

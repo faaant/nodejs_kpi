@@ -12,7 +12,8 @@
     "baseUrl": "src",
     "paths": {
       "@users/*": ["database/users/*"],
-      "@products/*": ["database/products/*"]
+      "@products/*": ["database/products/*"],
+      "@users-products/*": ["database/users-products/*"],
     },
     "incremental": true,
     "skipLibCheck": true,

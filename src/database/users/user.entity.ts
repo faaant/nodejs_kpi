@@ -1,4 +1,10 @@
-import { IsEmail, IsNotEmpty, Length, MinLength } from 'class-validator';
+import {
+  IsEmail,
+  IsNotEmpty,
+  Length,
+  MinLength,
+  IsMobilePhone,
+} from 'class-validator';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
@@ -29,6 +35,7 @@ export class User {
   email?: string;
 
   @Column({ default: null })
+  @IsMobilePhone('any', { message: 'Check phone number for correctness ' })
   @Length(9, 12, { message: 'Check phone number for correctness' })
   phone?: string;
 }

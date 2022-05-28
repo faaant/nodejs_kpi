@@ -46,7 +46,7 @@ export class ProductsService {
   }
 
   async createProduct(product: Product) {
-    const error = await validate(product, { skipMissingProperties: true });
+    const error = await validate(product);
     if (error.length > 0) {
       throw { message: 'Data is incorrect.' };
     }

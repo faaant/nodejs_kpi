@@ -7,7 +7,7 @@
 ## Tech stack
 <ol>
   <li>Nest</li>
-  <li>MySQL</li>
+  <li>PostgresSQL</li>
 </ol>
 
 ## Why

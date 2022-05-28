@@ -8,6 +8,7 @@ import { UsersProductsModule } from '@users-products/users-products.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import entities from './entities';
+import { UserPermissionsModule } from 'database/user-permissions/user-permissions.module';
 import { PermissionModule } from 'database/permissions/permissions.module';
 
 @Module({
@@ -26,6 +27,7 @@ import { PermissionModule } from 'database/permissions/permissions.module';
     UsersModule,
     ProductsModule,
     UsersProductsModule,
+    UserPermissionsModule,
     PermissionModule,
   ],
   controllers: [AppController],

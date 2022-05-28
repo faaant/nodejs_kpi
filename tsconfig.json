@@ -14,6 +14,7 @@
       "@users/*": ["database/users/*"],
       "@products/*": ["database/products/*"],
       "@users-products/*": ["database/users-products/*"],
+      "@user-permissions/*": ["database/user-permissions/*"],
       "@permissions/*": ["database/permissions/*"],
     },
     "incremental": true,

@@ -11,6 +11,7 @@ import {
 
 import { UsersService } from '@users/users.service';
 import { User } from '@users/user.entity';
+import { createUserObject } from './utils/user.functions';
 
 @Controller('users')
 export class UsersController {
@@ -18,33 +19,75 @@ export class UsersController {
 
   @Get()
   getAll(@Res() res) {
-    return this.usersService.getUsers();
+    return this.usersService
+      .getUsers()
+      .then((data) => {
+        return res.status(200).json(data);
+      })
+      .catch((error) => {
+        return res
+          .status(error?.message ? 400 : 500)
+          .json(error?.message || `Server error. Can't get users.`);
+      });
   }
 
   @Get(':id')
   get(@Param() params, @Res() res) {
-    return this.usersService.getUserById(params.id);
+    return this.usersService
+      .getUserById(params.id)
+      .then((data) => {
+        return res.status(200).json(data);
+      })
+      .catch((error) => {
+        return res
+          .status(error?.message ? 400 : 500)
+          .json(error?.message || `Server error. Can't get user.`);
+      });
   }
 
   @Post()
   async create(@Req() req, @Res() res) {
     const user = new User();
-    user.username = req.body?.username;
-    user.password = req.body?.password;
-    user.phone = req.body?.phone;
-    user.email = req.body?.email;
-    console.log(req.body);
-    await this.usersService.createUser(user);
+    createUserObject(req.body, user);
+    this.usersService
+      .createUser(user)
+      .then(() => {
+        return res.status(200).json(user);
+      })
+      .catch((error) => {
+        return res
+          .status(error?.message ? 400 : 500)
+          .json(error?.message || `Server error. Can't create user.`);
+      });
   }
 
   @Put(':id')
-  updateCertainUser(@Param() params, @Req() request, @Res() res) {
-    request.body.id = params.id;
-    this.usersService.updateUser(request.body);
+  async updateCertainUser(@Param() params, @Req() req, @Res() res) {
+    const user: User = await this.usersService.getUserById(params.id);
+    createUserObject(req.body, user);
+    this.usersService
+      .updateUser(user)
+      .then(() => {
+        return res.status(200).json(user);
+      })
+      .catch((error) => {
+        return res
+          .status(error?.message ? 400 : 500)
+          .json(error?.message || `Server error. Can't update user.`);
+      });
   }
 
   @Delete(':id')
   async deleteUser(@Param() params, @Res() res) {
-    return this.usersService.deleteUser(params.id);
+    return this.usersService
+      .deleteUser(params.id)
+      .then((data) => {
+        return res.status(200).json({ message: 'User successfully deleted' });
+      })
+      .catch((error) => {
+        return res
+          .status(error?.message ? 400 : 500)
+          .json(error?.message || `Server error. Can't delete user.`);
+      });
   }
 }

@@ -54,7 +54,9 @@ export class ProductsController {
     this.productsService
       .deleteProduct(params.id)
       .then(() => {
-        return res.status(200).json({ message: 'Product succesfully deleted' });
+        return res
+          .status(200)
+          .json({ message: 'Product successfully deleted' });
       })
       .catch((error) => {
         return res

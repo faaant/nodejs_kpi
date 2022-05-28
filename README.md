@@ -18,10 +18,10 @@
   <li>Nest CLI</li>
 </ul>
 
-### MySQL:
+### PostgresSQL:
 <ul>
   <li>Relative table structure</li>
-  <li>Experience in MySQL</li>
+  <li>Experience with relative databases</li>
 </ul>
 
 ## Database schema

@@ -19,7 +19,7 @@ export class Product {
   @IsNumber()
   price: number;
 
-  @Column()
+  @Column('real')
   @IsNotEmpty({
     message: 'Weight must be not empty',
   })

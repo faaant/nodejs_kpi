@@ -40,8 +40,8 @@ export class UsersProductsService {
       userId: body?.userId,
       productId: body?.productId,
     };
-    this.pairsRepository.create(userProduct);
-    this.pairsRepository.save(userProduct);
+    await this.pairsRepository.create(userProduct);
+    await this.pairsRepository.save(userProduct);
   }
 
   async deleteProduct(body) {
@@ -52,6 +52,6 @@ export class UsersProductsService {
       userId: body?.userId,
       productId: body?.productId,
     };
-    this.pairsRepository.delete(userProduct);
+    await this.pairsRepository.delete(userProduct);
   }
 }

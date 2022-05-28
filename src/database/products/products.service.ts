@@ -29,11 +29,11 @@ export class ProductsService {
     if (error.length > 0) {
       throw { message: 'Data is incorrect.' };
     }
-    this.productsRepository.update(product.id, product);
+    await this.productsRepository.update(product.id, product);
   }
 
   async deleteProduct(id: string) {
-    this.productsRepository.delete(id);
+    await this.productsRepository.delete(id);
   }
 
   async createProduct(product: Product) {
@@ -42,7 +42,7 @@ export class ProductsService {
     if (error.length > 0) {
       throw { message: 'Data is incorrect.' };
     }
-    this.productsRepository.create(product);
-    this.productsRepository.save(product);
+    await this.productsRepository.create(product);
+    await this.productsRepository.save(product);
   }
 }

@@ -80,7 +80,7 @@ export class UserPermissionsService {
       userId: body.userId,
       permissionId: body.permissionId,
     };
-    this.userPermissionsRepository.delete(userPermission);
+    await this.userPermissionsRepository.delete(userPermission);
   }
 
   async deleteAllPermissions(userId: string) {
@@ -95,8 +95,8 @@ export class UserPermissionsService {
       userId: body.userId,
       permissionId: body.permissionId,
     };
-    this.userPermissionsRepository.create(userPermission);
-    this.userPermissionsRepository.save(userPermission);
+    await this.userPermissionsRepository.create(userPermission);
+    await this.userPermissionsRepository.save(userPermission);
   }
 
   validatePermission(body) {

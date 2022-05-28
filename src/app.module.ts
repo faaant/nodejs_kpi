@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { UsersModule } from '@users/users.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import entities from './entities';
@@ -16,7 +17,8 @@ import entities from './entities';
       database: 'store',
       entities: entities,
       synchronize: true,
-    })
+    }),
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

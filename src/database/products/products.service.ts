@@ -17,7 +17,16 @@ export class ProductsService {
   async getProduct(_id: string): Promise<Product> {
     return (
       await this.productsRepository.find({
-        select: ['id', 'productName', 'price'],
+        select: [
+          'id',
+          'productName',
+          'price',
+          'weight',
+          'count',
+          'CPU',
+          'RAM',
+          'resolution',
+        ],
         where: [{ id: _id }],
       })
     )[0];

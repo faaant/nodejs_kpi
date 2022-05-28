@@ -1,5 +1,6 @@
 import { Controller, Delete, Get, Param, Post, Req, Res } from '@nestjs/common';
 import { UsersProductsService } from '@users-products/users-products.service';
+import { UserProducts } from '@users-products/user-products.entity';
 
 @Controller('list/products')
 export class UsersProductsController {
@@ -78,9 +79,12 @@ export class UsersProductsController {
 
   @Post(':id')
   addUserProduct(@Param() params, @Req() req, @Res() res) {
-    req.body.userId = params.id;
+    const userProduct = new UserProducts();
+    userProduct.userId = params.id;
+    userProduct.productId = req.body?.productId;
+
     this.usersProductsService
-      .addProduct(req.body)
+      .addProduct(userProduct)
       .then(() => {
         return res.status(200).json({
           message: 'Product added',
@@ -96,9 +100,12 @@ export class UsersProductsController {
 
   @Delete(':id')
   deleteUserProduct(@Param() params, @Req() req, @Res() res) {
-    req.body.userId = params.id;
+    const userProduct = new UserProducts();
+    userProduct.userId = params.id;
+    userProduct.productId = req.body?.productId;
+
     this.usersProductsService
-      .deleteProduct(req.body)
+      .deleteProduct(userProduct)
       .then(() => {
         return res.status(200).json({
           message: 'Product deleted',

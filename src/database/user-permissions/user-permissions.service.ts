@@ -8,6 +8,7 @@ import {
   adminPermissions,
   defaultPermissions,
 } from './user-permissions-constants';
+import { validate } from 'class-validator';
 
 @Injectable()
 export class UserPermissionsService {
@@ -37,6 +38,12 @@ export class UserPermissionsService {
   }
 
   async addUserPermission(userPermission: UserPermissions) {
+    const error = await validate(userPermission, {
+      skipMissingProperties: true,
+    });
+    if (error.length > 0) {
+      throw { message: 'Data is incorrect.' };
+    }
     await this.userPermissionsRepository.create(userPermission);
     await this.userPermissionsRepository.save(userPermission);
   }

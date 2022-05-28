@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserProducts } from '@users-products/users-products.entity';
+import { validate } from 'class-validator';
 
 @Injectable()
 export class UsersProductsService {
@@ -32,8 +33,9 @@ export class UsersProductsService {
   }
 
   async addProduct(body) {
-    if (body?.userId && body?.productId) {
-      throw 'Not all fields are filled';
+    const error = await validate(body, { skipMissingProperties: true });
+    if (error.length > 0) {
+      throw { message: 'Data is incorrect.' };
     }
     const userProduct = {
       userId: body?.userId,

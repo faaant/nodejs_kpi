@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '@users/user.entity';
 import { UserPermissionsService } from '@user-permissions/user-permissions.service';
+import { validate } from 'class-validator';
 
 @Injectable()
 export class UsersService {
@@ -34,6 +35,10 @@ export class UsersService {
   }
 
   async updateUser(user: User) {
+    const error = await validate(user, { skipMissingProperties: true });
+    if (error.length > 0) {
+      throw { message: 'Data is incorrect.' };
+    }
     await this.usersRepository.update(user.id, user);
   }
 
@@ -42,6 +47,10 @@ export class UsersService {
   }
 
   async createUser(user: User) {
+    const error = await validate(user, { skipMissingProperties: true });
+    if (error.length > 0) {
+      throw { message: 'Data is incorrect.' };
+    }
     await this.usersRepository.create(user);
     await this.usersRepository.save(user);
     await this.userPermissionsService.addDefaultUserPermissions(user.id);

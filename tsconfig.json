@@ -16,6 +16,7 @@
       "@users-products/*": ["database/users-products/*"],
       "@user-permissions/*": ["database/user-permissions/*"],
       "@permissions/*": ["database/permissions/*"],
+      "@auth/*": ["auth/*"],
     },
     "incremental": true,
     "skipLibCheck": true,

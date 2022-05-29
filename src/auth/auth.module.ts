@@ -7,6 +7,7 @@ import { UsersModule } from '@users/users.module';
 import { AuthController } from '@auth/auth.controller';
 import { JwtStrategy } from '@auth/jwt.strategy';
 import { AuthService } from '@auth//auth.service';
+import { SharedModule } from '@shared/shared.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { AuthService } from '@auth//auth.service';
       secret: process.env.SECRET,
       signOptions: { expiresIn: '600s' },
     }),
+    SharedModule,
   ],
   providers: [AuthService, JwtStrategy],
   exports: [AuthService],

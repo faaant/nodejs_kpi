@@ -7,7 +7,9 @@ import {
   Put,
   Req,
   Res,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 
 import { Product } from '@products/product.entity';
 import { ProductsService } from '@products/products.service';
@@ -17,6 +19,7 @@ import { createProductObject } from './utils/product.functions';
 export class ProductsController {
   constructor(private productsService: ProductsService) {}
 
+  @UseGuards(AuthGuard('jwt'))
   @Post()
   createProduct(@Req() req, @Res() res) {
     const product = new Product();
@@ -33,6 +36,7 @@ export class ProductsController {
       });
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Put(':id')
   async updateProduct(@Param() params, @Req() req, @Res() res) {
     const product: Product = await this.productsService.getProduct(params.id);
@@ -49,6 +53,7 @@ export class ProductsController {
       });
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
   deleteProduct(@Param() params, @Res() res): void {
     this.productsService

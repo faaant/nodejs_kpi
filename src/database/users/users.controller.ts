@@ -7,16 +7,23 @@ import {
   Param,
   Req,
   Res,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 
 import { UsersService } from '@users/users.service';
 import { User } from '@users/user.entity';
 import { createUserObject } from './utils/user.functions';
+import { JWTTokenService } from '@shared/jwt-token.service';
 
 @Controller('users')
 export class UsersController {
-  constructor(private usersService: UsersService) {}
+  constructor(
+    private usersService: UsersService,
+    private jwtTokenService: JWTTokenService,
+  ) {}
 
+  @UseGuards(AuthGuard('jwt'))
   @Get()
   getAll(@Res() res) {
     return this.usersService
@@ -31,6 +38,7 @@ export class UsersController {
       });
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Get(':id')
   get(@Param() params, @Res() res) {
     return this.usersService
@@ -45,6 +53,7 @@ export class UsersController {
       });
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Post()
   async create(@Req() req, @Res() res) {
     const user = new User();
@@ -61,6 +70,31 @@ export class UsersController {
       });
   }
 
+  @UseGuards(AuthGuard('jwt'))
+  @Put()
+  async update(@Req() req, @Res() res) {
+    const jwtData = this.jwtTokenService.decode(
+      req.headers['authorization'].split(' ')[1],
+    );
+    if (typeof jwtData === 'object') {
+      const user: User = await this.usersService.getUser(jwtData.username);
+      createUserObject(req.body, user);
+      this.usersService
+        .updateUser(user)
+        .then(() => {
+          return res.status(200).json({
+            message: 'User updated',
+          });
+        })
+        .catch((error) => {
+          return res.status(500).json({
+            message: error?.message ?? 'Fail to update user',
+          });
+        });
+    }
+  }
+
+  @UseGuards(AuthGuard('jwt'))
   @Put(':id')
   async updateCertainUser(@Param() params, @Req() req, @Res() res) {
     const user: User = await this.usersService.getUserById(params.id);
@@ -77,6 +111,7 @@ export class UsersController {
       });
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
   async deleteUser(@Param() params, @Res() res) {
     return this.usersService

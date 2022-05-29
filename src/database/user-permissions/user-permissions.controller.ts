@@ -1,12 +1,23 @@
-import { Controller, Delete, Get, Param, Post, Req, Res } from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { UserPermissions } from './user-permissions.entity';
 import { UserPermissionsService } from './user-permissions.service';
 import { createUserPermissionObject } from './utils/user-permissions.functions';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('user-permissions')
 export class UserPermissionsController {
   constructor(private userPermissionsService: UserPermissionsService) {}
 
+  @UseGuards(AuthGuard('jwt'))
   @Get()
   getAll(@Res() res) {
     return this.userPermissionsService.getAllPermissions().catch(() => {
@@ -16,6 +27,7 @@ export class UserPermissionsController {
     });
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Get(':id')
   getUserPermissions(@Param() params, @Res() res) {
     this.userPermissionsService.getUserPermissions(params.id).catch(() => {
@@ -25,6 +37,7 @@ export class UserPermissionsController {
     });
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Post(':id')
   addUserPermission(@Param() params, @Req() req, @Res() res) {
     req.body.userId = params.id;
@@ -45,6 +58,7 @@ export class UserPermissionsController {
       });
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
   deleteUserPermission(@Param() params, @Req() req, @Res() res) {
     req.body.userId = params.id;

@@ -1,12 +1,15 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { HttpModule } from '@nestjs/axios';
-import { ProductsModule } from '@products/products.module';
 
+import { ProductsModule } from '@products/products.module';
 import { UsersModule } from '@users/users.module';
+import { UsersProductsModule } from '@users-products/users-products.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import entities from './entities';
+import { UserPermissionsModule } from 'database/user-permissions/user-permissions.module';
+import { PermissionModule } from 'database/permissions/permissions.module';
 
 @Module({
   imports: [
@@ -23,6 +26,9 @@ import entities from './entities';
     }),
     UsersModule,
     ProductsModule,
+    UsersProductsModule,
+    UserPermissionsModule,
+    PermissionModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -11,6 +11,7 @@ import entities from './entities';
 import { UserPermissionsModule } from 'database/user-permissions/user-permissions.module';
 import { PermissionModule } from 'database/permissions/permissions.module';
 import { AuthModule } from '@auth/auth.module';
+import { SharedModule } from './shared/shared.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { AuthModule } from '@auth/auth.module';
     UserPermissionsModule,
     PermissionModule,
     AuthModule,
+    SharedModule,
   ],
   controllers: [AppController],
   providers: [AppService],

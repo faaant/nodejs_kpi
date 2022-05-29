@@ -17,6 +17,7 @@
       "@user-permissions/*": ["database/user-permissions/*"],
       "@permissions/*": ["database/permissions/*"],
       "@auth/*": ["auth/*"],
+      "@shared/*": ["shared/*"],
     },
     "incremental": true,
     "skipLibCheck": true,

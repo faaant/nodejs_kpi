@@ -37,12 +37,8 @@ export class UsersProductsService {
     if (error.length > 0) {
       throw { message: 'Data is incorrect.' };
     }
-    const userProduct = {
-      userId: userProducts?.userId,
-      productId: userProducts?.productId,
-    };
-    await this.pairsRepository.create(userProduct);
-    await this.pairsRepository.save(userProduct);
+    await this.pairsRepository.create(userProducts);
+    await this.pairsRepository.save(userProducts);
   }
 
   async deleteProduct(userProducts: UserProducts) {
@@ -50,10 +46,6 @@ export class UsersProductsService {
     if (error.length > 0) {
       throw { message: 'Data is incorrect.' };
     }
-    const userProduct = {
-      userId: userProducts?.userId,
-      productId: userProducts?.productId,
-    };
-    await this.pairsRepository.delete(userProduct);
+    await this.pairsRepository.delete(userProducts);
   }
 }

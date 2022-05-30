@@ -1,21 +1,43 @@
-import { Controller, Delete, Get, Param, Post, Req, Res } from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { UserPermissions } from './user-permissions.entity';
 import { UserPermissionsService } from './user-permissions.service';
 import { createUserPermissionObject } from './utils/user-permissions.functions';
+import { AuthGuard } from '@nestjs/passport';
+import { Permissions } from '@shared/decorators/permissions.decorator';
+import { PermissionGuard } from '@guards/permission.guard';
 
 @Controller('user-permissions')
 export class UserPermissionsController {
   constructor(private userPermissionsService: UserPermissionsService) {}
 
+  @Permissions('get-permissions-list')
+  @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Get()
   getAll(@Res() res) {
-    return this.userPermissionsService.getAllPermissions().catch(() => {
-      return res.status(500).json({
-        message: 'Fail to get users and their permissions',
+    console.log('here');
+    return this.userPermissionsService
+      .getAllPermissions()
+      .then((data) => {
+        return res.status(200).json(data);
+      })
+      .catch(() => {
+        return res.status(500).json({
+          message: 'Fail to get users and their permissions',
+        });
       });
-    });
   }
 
+  @Permissions('get-user-permissions')
+  @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Get(':id')
   getUserPermissions(@Param() params, @Res() res) {
     this.userPermissionsService.getUserPermissions(params.id).catch(() => {
@@ -25,6 +47,8 @@ export class UserPermissionsController {
     });
   }
 
+  @Permissions('add-user-permission')
+  @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Post(':id')
   addUserPermission(@Param() params, @Req() req, @Res() res) {
     req.body.userId = params.id;
@@ -45,6 +69,8 @@ export class UserPermissionsController {
       });
   }
 
+  @Permissions('delete-user-permission')
+  @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Delete(':id')
   deleteUserPermission(@Param() params, @Req() req, @Res() res) {
     req.body.userId = params.id;

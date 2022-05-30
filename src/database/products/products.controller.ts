@@ -1,3 +1,4 @@
+import { PermissionGuard } from '@guards/permission.guard';
 import {
   Controller,
   Delete,
@@ -7,16 +8,21 @@ import {
   Put,
   Req,
   Res,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 
 import { Product } from '@products/product.entity';
 import { ProductsService } from '@products/products.service';
+import { Permissions } from '@shared/decorators/permissions.decorator';
 import { createProductObject } from './utils/product.functions';
 
 @Controller('products')
 export class ProductsController {
   constructor(private productsService: ProductsService) {}
 
+  @Permissions('create-product')
+  @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Post()
   createProduct(@Req() req, @Res() res) {
     const product = new Product();
@@ -33,6 +39,8 @@ export class ProductsController {
       });
   }
 
+  @Permissions('update-product')
+  @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Put(':id')
   async updateProduct(@Param() params, @Req() req, @Res() res) {
     const product: Product = await this.productsService.getProduct(params.id);
@@ -49,6 +57,8 @@ export class ProductsController {
       });
   }
 
+  @Permissions('delete-product')
+  @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Delete(':id')
   deleteProduct(@Param() params, @Res() res): void {
     this.productsService

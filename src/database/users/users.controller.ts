@@ -14,7 +14,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { UsersService } from '@users/users.service';
 import { User } from '@users/user.entity';
 import { createUserObject } from './utils/user.functions';
-import { JWTTokenService } from '@shared/jwt-token.service';
+import { JWTTokenService } from '@shared/services/jwt-token.service';
 
 @Controller('users')
 export class UsersController {

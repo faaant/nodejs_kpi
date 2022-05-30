@@ -11,7 +11,7 @@ import {
 import { UsersProductsService } from '@users-products/users-products.service';
 import { UserProducts } from '@users-products/user-products.entity';
 import { AuthGuard } from '@nestjs/passport';
-import { JWTTokenService } from '@shared/jwt-token.service';
+import { JWTTokenService } from '@shared/services/jwt-token.service';
 import { createUserProductObject } from './utils/users-products.functions';
 
 @Controller('list/products')

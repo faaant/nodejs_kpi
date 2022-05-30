@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
-import { JWTTokenService } from '@shared/jwt-token.service';
+import { JWTTokenService } from '@shared/services/jwt-token.service';
 
 @Module({
   imports: [

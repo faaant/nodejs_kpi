@@ -1,5 +1,5 @@
 import { Controller, Req, Post, Res } from '@nestjs/common';
-import { JWTTokenService } from '@shared/jwt-token.service';
+import { JWTTokenService } from '@shared/services/jwt-token.service';
 import { AuthService } from '@auth/auth.service';
 
 @Controller('auth')

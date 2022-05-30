@@ -13,6 +13,7 @@ import { JwtinsertionMiddleware } from './middlewares/jwt-insertion.middleware';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import entities from './entities';
+import { LoggerMiddleware } from 'middlewares/logger.middleware';
 
 @Module({
   imports: [
@@ -41,5 +42,6 @@ import entities from './entities';
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(JwtinsertionMiddleware).exclude('auth/(.*)').forRoutes('*');
+    consumer.apply(LoggerMiddleware).forRoutes('*');
   }
 }

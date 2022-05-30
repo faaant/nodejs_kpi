@@ -20,4 +20,4 @@
 </ul>
 
 ## Database schema
-[Databse schema](docs/db_schema.png)
+![This is database schema](/docs/db_schema.png)

@@ -13,6 +13,8 @@ import { UserProducts } from '@users-products/user-products.entity';
 import { AuthGuard } from '@nestjs/passport';
 import { JWTTokenService } from '@shared/services/jwt-token.service';
 import { createUserProductObject } from './utils/users-products.functions';
+import { Permissions } from '@shared/decorators/permissions.decorator';
+import { PermissionGuard } from '@guards/permission.guard';
 
 @Controller('list/products')
 export class UsersProductsController {
@@ -21,7 +23,8 @@ export class UsersProductsController {
     private jwtTokenService: JWTTokenService,
   ) {}
 
-  @UseGuards(AuthGuard('jwt'))
+  @Permissions('get-users-products')
+  @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Get('/all')
   getAll(@Res() res) {
     return this.usersProductsService
@@ -36,7 +39,8 @@ export class UsersProductsController {
       });
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @Permissions('get-user-products')
+  @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Get()
   getProducts(@Req() req, @Res() res) {
     const jwtData = this.jwtTokenService.decode(
@@ -56,63 +60,62 @@ export class UsersProductsController {
     }
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @Permissions('delete-user-product')
+  @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Delete()
   deleteProduct(@Req() req, @Res() res) {
-    if (req?.body?.productId) {
-      const jwtData = this.jwtTokenService.decode(
-        req.headers['authorization'].split(' ')[1],
-      );
-      if (typeof jwtData === 'object') {
-        req.body.userId = jwtData.id;
-        const userProduct = new UserProducts();
-        createUserProductObject(req.body, userProduct);
-        this.usersProductsService
-          .deleteProduct(userProduct)
-          .then(() => {
-            return res.status(200).json({
-              message: 'Product deleted',
-            });
-          })
-          .catch((err) => {
-            const statusCode = err?.message ? 400 : 500;
-            return res.status(statusCode).json({
-              message: err?.message ?? 'Fail to delete product',
-            });
+    const jwtData = this.jwtTokenService.decode(
+      req.headers['authorization'].split(' ')[1],
+    );
+    if (typeof jwtData === 'object') {
+      req.body.userId = jwtData.id;
+      const userProduct = new UserProducts();
+      createUserProductObject(req.body, userProduct);
+      this.usersProductsService
+        .deleteProduct(userProduct)
+        .then(() => {
+          return res.status(200).json({
+            message: 'Product deleted',
           });
-      }
+        })
+        .catch((err) => {
+          const statusCode = err?.message ? 400 : 500;
+          return res.status(statusCode).json({
+            message: err?.message ?? 'Fail to delete product',
+          });
+        });
     }
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @Permissions(`add-user-product`)
+  @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Post()
   addProduct(@Req() req, @Res() res) {
-    if (req.body?.productId) {
-      const jwtData = this.jwtTokenService.decode(
-        req.headers['authorization'].split(' ')[1],
-      );
-      if (typeof jwtData === 'object') {
-        req.body.userId = jwtData.id;
-        const userProduct = new UserProducts();
-        createUserProductObject(req.body, userProduct);
-        this.usersProductsService
-          .addProduct(userProduct)
-          .then(() => {
-            return res.status(200).json({
-              message: 'Product added',
-            });
-          })
-          .catch((err) => {
-            const statusCode = err?.message ? 400 : 500;
-            return res.status(statusCode).json({
-              message: err?.message ?? 'Fail to add product',
-            });
+    const jwtData = this.jwtTokenService.decode(
+      req.headers['authorization'].split(' ')[1],
+    );
+    if (typeof jwtData === 'object') {
+      req.body.userId = jwtData.id;
+      const userProduct = new UserProducts();
+      createUserProductObject(req.body, userProduct);
+      this.usersProductsService
+        .addProduct(userProduct)
+        .then(() => {
+          return res.status(200).json({
+            message: 'Product added',
           });
-      }
+        })
+        .catch((err) => {
+          const statusCode = err?.message ? 400 : 500;
+          return res.status(statusCode).json({
+            message: err?.message ?? 'Fail to add product',
+          });
+        });
     }
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @Permissions('get-certain-user-products')
+  @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Get(':id')
   getUserProducts(@Param() params, @Res() res) {
     return this.usersProductsService.getUserProducts(params.id).catch(() => {
@@ -122,7 +125,8 @@ export class UsersProductsController {
     });
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @Permissions(`add-product-to-certain-user`)
+  @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Post(':id')
   addUserProduct(@Param() params, @Req() req, @Res() res) {
     req.body.userId = params.id;
@@ -143,7 +147,8 @@ export class UsersProductsController {
       });
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @Permissions(`delete-product-from-certain-user`)
+  @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Delete(':id')
   deleteUserProduct(@Param() params, @Req() req, @Res() res) {
     req.body.userId = params.id;

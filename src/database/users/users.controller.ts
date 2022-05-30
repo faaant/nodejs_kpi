@@ -15,6 +15,8 @@ import { UsersService } from '@users/users.service';
 import { User } from '@users/user.entity';
 import { createUserObject } from './utils/user.functions';
 import { JWTTokenService } from '@shared/services/jwt-token.service';
+import { Permissions } from '@shared/decorators/permissions.decorator';
+import { PermissionGuard } from '@guards/permission.guard';
 
 @Controller('users')
 export class UsersController {
@@ -23,7 +25,8 @@ export class UsersController {
     private jwtTokenService: JWTTokenService,
   ) {}
 
-  @UseGuards(AuthGuard('jwt'))
+  @Permissions('get-users')
+  @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Get()
   getAll(@Res() res) {
     return this.usersService
@@ -38,7 +41,8 @@ export class UsersController {
       });
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @Permissions('get-user')
+  @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Get(':id')
   get(@Param() params, @Res() res) {
     return this.usersService
@@ -70,7 +74,8 @@ export class UsersController {
       });
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @Permissions('update-user')
+  @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Put()
   async update(@Req() req, @Res() res) {
     const jwtData = this.jwtTokenService.decode(
@@ -94,7 +99,8 @@ export class UsersController {
     }
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @Permissions('update-certain-user')
+  @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Put(':id')
   async updateCertainUser(@Param() params, @Req() req, @Res() res) {
     const user: User = await this.usersService.getUserById(params.id);
@@ -111,7 +117,8 @@ export class UsersController {
       });
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @Permissions('delete-user')
+  @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Delete(':id')
   async deleteUser(@Param() params, @Res() res) {
     return this.usersService

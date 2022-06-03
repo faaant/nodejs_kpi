@@ -20,10 +20,7 @@ import { PermissionGuard } from '@guards/permission.guard';
 
 @Controller('users')
 export class UsersController {
-  constructor(
-    private usersService: UsersService,
-    private jwtTokenService: JWTTokenService,
-  ) {}
+  constructor(private usersService: UsersService) {}
 
   @Permissions('get-users')
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
@@ -72,31 +69,6 @@ export class UsersController {
           .status(error?.message ? 400 : 500)
           .json(error?.message || `Server error. Can't create user.`);
       });
-  }
-
-  @Permissions('update-user')
-  @UseGuards(AuthGuard('jwt'), PermissionGuard)
-  @Put()
-  async update(@Req() req, @Res() res) {
-    const jwtData = this.jwtTokenService.decode(
-      req.headers['authorization'].split(' ')[1],
-    );
-    if (typeof jwtData === 'object') {
-      const user: User = await this.usersService.getUser(jwtData.username);
-      createUserObject(req.body, user);
-      this.usersService
-        .updateUser(user)
-        .then(() => {
-          return res.status(200).json({
-            message: 'User updated',
-          });
-        })
-        .catch((error) => {
-          return res.status(500).json({
-            message: error?.message ?? 'Fail to update user',
-          });
-        });
-    }
   }
 
   @Permissions('update-certain-user')

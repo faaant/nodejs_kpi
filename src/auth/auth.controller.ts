@@ -7,19 +7,12 @@ export class AuthController {
 
   @Post('login')
   login(@Req() req, @Res() res) {
-    this.authService
-      .login(req.body)
-      .then((jwtToken) => {
-        res.cookie('jwt', jwtToken.access_token, {
-          httpOnly: true,
-          sameSite: true,
-        });
-        return res.status(200).json(jwtToken);
-      })
-      .catch(() => {
-        return res.status(400).json({
-          message: 'Not valid user',
-        });
+    return this.authService.login(req.body).then((jwtToken) => {
+      res.cookie('jwt', jwtToken.access_token, {
+        httpOnly: true,
+        sameSite: true,
       });
+      return res.status(200).json(jwtToken);
+    });
   }
 }

@@ -1,4 +1,5 @@
 import { NestFactory } from '@nestjs/core';
+import { AllExceptionsFilter } from 'filters/exceptions.filter';
 import { WinstonModule } from 'nest-winston';
 import * as winston from 'winston';
 import { AppModule } from './app.module';
@@ -24,6 +25,7 @@ async function bootstrap() {
       ],
       exceptionHandlers: [
         new winston.transports.File({ filename: 'logs/exceptions.log' }),
+        new winston.transports.Console(),
       ],
 
       format: winston.format.combine(

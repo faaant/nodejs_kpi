@@ -23,18 +23,11 @@ export class UserController {
     if (typeof jwtData === 'object') {
       const user: User = await this.usersService.getUser(jwtData.username);
       createUserObject(req.body, user);
-      this.usersService
-        .updateUser(user)
-        .then(() => {
-          return res.status(200).json({
-            message: 'User updated',
-          });
-        })
-        .catch((error) => {
-          return res.status(500).json({
-            message: error?.message ?? 'Fail to update user',
-          });
+      return this.usersService.updateUser(user).then(() => {
+        return res.status(200).json({
+          message: 'User updated',
         });
+      });
     }
   }
 }

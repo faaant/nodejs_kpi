@@ -3,9 +3,9 @@ import { Controller, Put, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Permissions } from '@shared/decorators/permissions.decorator';
 import { JWTTokenService } from '@shared/services/jwt-token.service';
-import { User } from './user.entity';
-import { UsersService } from './users.service';
-import { createUserObject } from './utils/user.functions';
+import { User } from '@users/user.entity';
+import { UsersService } from '@users/users.service';
+import { createUserObject } from '@users/utils/user.functions';
 
 @Controller('user')
 export class UserController {

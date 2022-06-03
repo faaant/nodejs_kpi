@@ -1,4 +1,4 @@
-import { UserPermissions } from '../user-permissions.entity';
+import { UserPermissions } from '@user-permissions/user-permissions.entity';
 
 export function createUserPermissionObject(
   userPermission: UserPermissions,

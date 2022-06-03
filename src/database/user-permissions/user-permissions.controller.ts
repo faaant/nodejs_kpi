@@ -8,9 +8,9 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { UserPermissions } from './user-permissions.entity';
-import { UserPermissionsService } from './user-permissions.service';
-import { createUserPermissionObject } from './utils/user-permissions.functions';
+import { UserPermissions } from '@user-permissions/user-permissions.entity';
+import { UserPermissionsService } from '@user-permissions/user-permissions.service';
+import { createUserPermissionObject } from '@user-permissions/utils/user-permissions.functions';
 import { AuthGuard } from '@nestjs/passport';
 import { Permissions } from '@shared/decorators/permissions.decorator';
 import { PermissionGuard } from '@guards/permission.guard';
@@ -54,17 +54,11 @@ export class UserPermissionsController {
     req.body.userId = params.id;
     const userPermission = new UserPermissions();
     createUserPermissionObject(req.body, userPermission);
-    this.userPermissionsService
+    return this.userPermissionsService
       .addUserPermission(userPermission)
       .then(() => {
         return res.status(200).json({
           message: 'User permission added',
-        });
-      })
-      .catch((error) => {
-        const statusCode = error?.message ? 400 : 500;
-        return res.status(statusCode).json({
-          message: error?.message ?? 'Fail to add user permission',
         });
       });
   }
@@ -76,17 +70,11 @@ export class UserPermissionsController {
     req.body.userId = params.id;
     const userPermission = new UserPermissions();
     createUserPermissionObject(req.body, userPermission);
-    this.userPermissionsService
+    return this.userPermissionsService
       .deleteUserPermission(userPermission)
       .then(() => {
         return res.status(200).json({
           message: 'User permission deleted',
-        });
-      })
-      .catch((error) => {
-        const statusCode = error?.message ? 400 : 500;
-        return res.status(statusCode).json({
-          message: error?.message ?? 'Fail to delete user permission',
         });
       });
   }

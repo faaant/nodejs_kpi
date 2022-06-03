@@ -30,16 +30,9 @@ export class BasketController {
       req.headers['authorization'].split(' ')[1],
     );
     if (typeof jwtData === 'object') {
-      return this.basketsService
-        .getBaskets(jwtData?.id)
-        .then((data) => {
-          return res.status(200).json(data);
-        })
-        .catch(() => {
-          return res.status(500).json({
-            message: 'Fail to get products',
-          });
-        });
+      return this.basketsService.getBaskets(jwtData?.id).then((data) => {
+        return res.status(200).json(data);
+      });
     }
   }
 
@@ -54,19 +47,11 @@ export class BasketController {
       req.body.userId = jwtData.id;
       const userProduct = new Baskets();
       createBasketObject(req.body, userProduct);
-      this.basketsService
-        .deleteProduct(userProduct)
-        .then(() => {
-          return res.status(200).json({
-            message: 'Product deleted',
-          });
-        })
-        .catch((err) => {
-          const statusCode = err?.message ? 400 : 500;
-          return res.status(statusCode).json({
-            message: err?.message ?? 'Fail to delete product',
-          });
+      return this.basketsService.deleteProduct(userProduct).then(() => {
+        return res.status(200).json({
+          message: 'Product deleted',
         });
+      });
     }
   }
 
@@ -81,19 +66,11 @@ export class BasketController {
       req.body.userId = jwtData.id;
       const userProduct = new Baskets();
       createBasketObject(req.body, userProduct);
-      this.basketsService
-        .addProduct(userProduct)
-        .then(() => {
-          return res.status(200).json({
-            message: 'Product added',
-          });
-        })
-        .catch((err) => {
-          const statusCode = err?.message ? 400 : 500;
-          return res.status(statusCode).json({
-            message: err?.message ?? 'Fail to add product',
-          });
+      return this.basketsService.addProduct(userProduct).then(() => {
+        return res.status(200).json({
+          message: 'Product added',
         });
+      });
     }
   }
 }

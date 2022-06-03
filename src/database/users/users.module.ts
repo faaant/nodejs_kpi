@@ -7,7 +7,7 @@ import { User } from '@users/user.entity';
 import { UserPermissionsModule } from '@user-permissions/user-permissions.module';
 import { SharedModule } from '@shared/shared.module';
 import { PermissionModule } from '@permissions/permissions.module';
-import { UserController } from './user.controller';
+import { UserController } from '@users/user.controller';
 
 @Module({
   imports: [

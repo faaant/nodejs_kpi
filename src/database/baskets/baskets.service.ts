@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { validate } from 'class-validator';
@@ -35,7 +35,7 @@ export class BasketsService {
   async addProduct(baskets: Baskets) {
     const error = await validate(baskets, { skipMissingProperties: true });
     if (error.length > 0) {
-      throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
+      throw new BadRequestException();
     }
     await this.pairsRepository.create(baskets);
     await this.pairsRepository.save(baskets);
@@ -44,7 +44,7 @@ export class BasketsService {
   async deleteProduct(baskets: Baskets) {
     const error = await validate(baskets, { skipMissingProperties: true });
     if (error.length > 0) {
-      throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
+      throw new BadRequestException();
     }
     await this.pairsRepository.delete(baskets);
   }

@@ -7,7 +7,7 @@ import { User } from './user.entity';
 import { UsersService } from './users.service';
 import { createUserObject } from './utils/user.functions';
 
-@Controller('profile')
+@Controller('user')
 export class UserController {
   constructor(
     private usersService: UsersService,
@@ -15,7 +15,7 @@ export class UserController {
   ) {}
   @Permissions('update-user')
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
-  @Put()
+  @Put('profile')
   async update(@Req() req, @Res() res) {
     const jwtData = this.jwtTokenService.decode(
       req.headers['authorization'].split(' ')[1],

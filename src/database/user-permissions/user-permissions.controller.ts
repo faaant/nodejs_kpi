@@ -23,28 +23,20 @@ export class UserPermissionsController {
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Get()
   getAll(@Res() res) {
-    console.log('here');
-    return this.userPermissionsService
-      .getAllPermissions()
-      .then((data) => {
-        return res.status(200).json(data);
-      })
-      .catch(() => {
-        return res.status(500).json({
-          message: 'Fail to get users and their permissions',
-        });
-      });
+    return this.userPermissionsService.getAllPermissions().then((data) => {
+      return res.status(200).json(data);
+    });
   }
 
   @Permissions('get-user-permissions')
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Get(':id')
   getUserPermissions(@Param() params, @Res() res) {
-    this.userPermissionsService.getUserPermissions(params.id).catch(() => {
-      return res.status(500).json({
-        message: 'Fail to get user permissions',
+    return this.userPermissionsService
+      .getUserPermissions(params.id)
+      .then((data) => {
+        return res.status(200).json(data);
       });
-    });
   }
 
   @Permissions('add-user-permission')

@@ -43,6 +43,7 @@ export class UsersService {
   }
 
   async deleteUser(id: string) {
+    this.userPermissionsService.deleteAllPermissions(id);
     await this.usersRepository.delete(id);
   }
 

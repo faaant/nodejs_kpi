@@ -21,7 +21,7 @@ export class BasketsController {
 
   @Permissions('get-baskets')
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
-  @Get('/all')
+  @Get()
   getAll(@Res() res) {
     return this.basketsService.getAll().then((data) => {
       return res.status(200).json(data);
@@ -32,7 +32,9 @@ export class BasketsController {
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Get(':id')
   getBaskets(@Param() params, @Res() res) {
-    return this.basketsService.getBaskets(params.id);
+    return this.basketsService.getBaskets(params.id).then((data) => {
+      return res.status(200).json(data);
+    });
   }
 
   @Permissions(`add-product-to-certain-user`)

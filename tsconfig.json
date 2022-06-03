@@ -13,7 +13,7 @@
     "paths": {
       "@users/*": ["database/users/*"],
       "@products/*": ["database/products/*"],
-      "@users-products/*": ["database/users-products/*"],
+      "@baskets/*": ["database/baskets/*"],
       "@user-permissions/*": ["database/user-permissions/*"],
       "@permissions/*": ["database/permissions/*"],
       "@auth/*": ["auth/*"],

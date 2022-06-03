@@ -4,7 +4,6 @@ import { HttpModule } from '@nestjs/axios';
 
 import { ProductsModule } from '@products/products.module';
 import { UsersModule } from '@users/users.module';
-import { UsersProductsModule } from '@users-products/users-products.module';
 import { UserPermissionsModule } from 'database/user-permissions/user-permissions.module';
 import { PermissionModule } from 'database/permissions/permissions.module';
 import { AuthModule } from '@auth/auth.module';
@@ -14,6 +13,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import entities from './entities';
 import { LoggerMiddleware } from 'middlewares/logger.middleware';
+import { BasketsModule } from '@baskets/baskets.module';
 
 @Module({
   imports: [
@@ -30,7 +30,7 @@ import { LoggerMiddleware } from 'middlewares/logger.middleware';
     }),
     UsersModule,
     ProductsModule,
-    UsersProductsModule,
+    BasketsModule,
     UserPermissionsModule,
     PermissionModule,
     AuthModule,

@@ -1,5 +1,4 @@
 import { NestFactory } from '@nestjs/core';
-import { AllExceptionsFilter } from 'filters/exceptions.filter';
 import { WinstonModule } from 'nest-winston';
 import * as winston from 'winston';
 import { AppModule } from './app.module';

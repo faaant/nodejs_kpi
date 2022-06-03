@@ -63,7 +63,7 @@ export class UsersController {
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Delete(':id')
   async deleteUser(@Param() params, @Res() res) {
-    return this.usersService.deleteUser(params.id).then((data) => {
+    return this.usersService.deleteUser(params.id).then(() => {
       return res.status(200).json({ message: 'User successfully deleted' });
     });
   }

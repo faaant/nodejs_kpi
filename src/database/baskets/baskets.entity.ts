@@ -21,9 +21,9 @@ export class Baskets {
   })
   productId: string;
 
-  @ManyToOne((type) => User, (user) => user)
+  @ManyToOne(() => User, (user) => user)
   user: User;
 
-  @ManyToOne((type) => Product, (product) => product)
+  @ManyToOne(() => Product, (product) => product)
   product: Product;
 }

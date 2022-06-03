@@ -20,9 +20,9 @@ export class UserPermissions {
   })
   permissionId: number;
 
-  @ManyToOne((type) => Permission, (permission) => permission)
+  @ManyToOne(() => Permission, (permission) => permission)
   permission: Permission;
 
-  @ManyToOne((type) => User, (user) => user)
+  @ManyToOne(() => User, (user) => user)
   user: User;
 }

@@ -4,9 +4,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { SharedModule } from '@shared/shared.module';
 import { UserPermissionsModule } from '@user-permissions/user-permissions.module';
 import { PermissionModule } from '@permissions/permissions.module';
-import { Baskets } from './baskets.entity';
-import { BasketsController } from './baskets.controller';
-import { BasketsService } from './baskets.service';
+import { Baskets } from '@baskets/baskets.entity';
+import { BasketsController } from '@baskets/baskets.controller';
+import { BasketsService } from '@baskets/baskets.service';
+import { BasketController } from '@baskets/basket.controller';
 
 @Module({
   imports: [
@@ -15,7 +16,7 @@ import { BasketsService } from './baskets.service';
     UserPermissionsModule,
     PermissionModule,
   ],
-  controllers: [BasketsController],
+  controllers: [BasketsController, BasketController],
   providers: [BasketsService],
 })
 export class BasketsModule {}

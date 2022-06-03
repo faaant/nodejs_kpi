@@ -3,9 +3,9 @@ import { Controller, Put, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Permissions } from '@shared/decorators/permissions.decorator';
 import { JWTTokenService } from '@shared/services/jwt-token.service';
-import { User } from './user.entity';
-import { UsersService } from './users.service';
-import { createUserObject } from './utils/user.functions';
+import { User } from '@users/user.entity';
+import { UsersService } from '@users/users.service';
+import { createUserObject } from '@users/utils/user.functions';
 
 @Controller('user')
 export class UserController {
@@ -23,18 +23,11 @@ export class UserController {
     if (typeof jwtData === 'object') {
       const user: User = await this.usersService.getUser(jwtData.username);
       createUserObject(req.body, user);
-      this.usersService
-        .updateUser(user)
-        .then(() => {
-          return res.status(200).json({
-            message: 'User updated',
-          });
-        })
-        .catch((error) => {
-          return res.status(500).json({
-            message: error?.message ?? 'Fail to update user',
-          });
+      return this.usersService.updateUser(user).then(() => {
+        return res.status(200).json({
+          message: 'User updated',
         });
+      });
     }
   }
 }

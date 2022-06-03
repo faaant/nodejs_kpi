@@ -14,6 +14,8 @@ import { AppService } from './app.service';
 import entities from './entities';
 import { LoggerMiddleware } from 'middlewares/logger.middleware';
 import { BasketsModule } from '@baskets/baskets.module';
+import { APP_FILTER } from '@nestjs/core';
+import { AllExceptionsFilter } from 'filters/exceptions.filter';
 
 @Module({
   imports: [
@@ -37,7 +39,13 @@ import { BasketsModule } from '@baskets/baskets.module';
     SharedModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_FILTER,
+      useClass: AllExceptionsFilter,
+    },
+  ],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {

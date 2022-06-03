@@ -1,13 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Permission } from '@permissions/permissions.entity';
 import { PermissionsService } from '@permissions/permissions.service';
-import { UserPermissions } from './user-permissions.entity';
+import { UserPermissions } from '@user-permissions/user-permissions.entity';
 import {
   adminPermissions,
   defaultPermissions,
-} from './user-permissions-constants';
+} from '@user-permissions/user-permissions-constants';
 import { validate } from 'class-validator';
 
 @Injectable()
@@ -42,7 +42,7 @@ export class UserPermissionsService {
       skipMissingProperties: true,
     });
     if (error.length > 0) {
-      throw { message: 'Data is incorrect.' };
+      throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
     }
     await this.userPermissionsRepository.create(userPermission);
     await this.userPermissionsRepository.save(userPermission);

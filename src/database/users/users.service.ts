@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '@users/user.entity';
@@ -37,7 +37,7 @@ export class UsersService {
   async updateUser(user: User) {
     const error = await validate(user, { skipMissingProperties: true });
     if (error.length > 0) {
-      throw { message: 'Data is incorrect.' };
+      throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
     }
     await this.usersRepository.update(user.id, user);
   }
@@ -49,7 +49,7 @@ export class UsersService {
   async createUser(user: User) {
     const error = await validate(user, { skipMissingProperties: true });
     if (error.length > 0) {
-      throw { message: 'Data is incorrect.' };
+      throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
     }
     await this.usersRepository.create(user);
     await this.usersRepository.save(user);

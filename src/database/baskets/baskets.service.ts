@@ -1,21 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { UserProducts } from '@users-products/user-products.entity';
 import { validate } from 'class-validator';
+import { Baskets } from '@baskets/baskets.entity';
 
 @Injectable()
-export class UsersProductsService {
+export class BasketsService {
   constructor(
-    @InjectRepository(UserProducts)
-    private pairsRepository: Repository<UserProducts>,
+    @InjectRepository(Baskets)
+    private pairsRepository: Repository<Baskets>,
   ) {}
 
-  async getAll(): Promise<UserProducts[]> {
+  async getAll(): Promise<Baskets[]> {
     return await this.pairsRepository.find();
   }
 
-  async getUserProducts(_id: string): Promise<UserProducts[]> {
+  async getBaskets(_id: string): Promise<Baskets[]> {
     return await this.pairsRepository.find({
       select: ['productId'],
       where: [{ userId: _id }],
@@ -25,27 +25,27 @@ export class UsersProductsService {
   async getUserProductId(
     _userId: string,
     _productId: string,
-  ): Promise<UserProducts[]> {
+  ): Promise<Baskets[]> {
     return await this.pairsRepository.find({
       select: ['productId'],
       where: [{ userId: _userId, productId: _productId }],
     });
   }
 
-  async addProduct(userProducts: UserProducts) {
-    const error = await validate(userProducts, { skipMissingProperties: true });
+  async addProduct(baskets: Baskets) {
+    const error = await validate(baskets, { skipMissingProperties: true });
     if (error.length > 0) {
       throw { message: 'Data is incorrect.' };
     }
-    await this.pairsRepository.create(userProducts);
-    await this.pairsRepository.save(userProducts);
+    await this.pairsRepository.create(baskets);
+    await this.pairsRepository.save(baskets);
   }
 
-  async deleteProduct(userProducts: UserProducts) {
-    const error = await validate(userProducts, { skipMissingProperties: true });
+  async deleteProduct(baskets: Baskets) {
+    const error = await validate(baskets, { skipMissingProperties: true });
     if (error.length > 0) {
       throw { message: 'Data is incorrect.' };
     }
-    await this.pairsRepository.delete(userProducts);
+    await this.pairsRepository.delete(baskets);
   }
 }

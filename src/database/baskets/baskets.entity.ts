@@ -5,7 +5,7 @@ import { Product } from '@products/product.entity';
 import { User } from '@users/user.entity';
 
 @Entity()
-export class UserProducts {
+export class Baskets {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

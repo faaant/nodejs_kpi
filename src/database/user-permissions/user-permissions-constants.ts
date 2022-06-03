@@ -17,7 +17,7 @@ export const adminPermissions: string[] = [
   'get-user-permissions',
   'add-user-permission',
   'delete-user-permission',
-  'get-users-products',
+  'get-baskets',
   'get-certain-user-products',
   'add-product-to-certain-user',
   'delete-product-from-certain-user',

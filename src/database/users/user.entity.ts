@@ -10,7 +10,7 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 @Entity()
 export class User {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id?: string;
 
   @Column({ unique: true })
   @IsNotEmpty({
@@ -19,7 +19,7 @@ export class User {
   @MinLength(2, {
     message: 'Username is too short',
   })
-  username: string;
+  username?: string;
 
   @Column()
   @IsNotEmpty({
@@ -28,7 +28,7 @@ export class User {
   @MinLength(8, {
     message: 'Password is too week',
   })
-  password: string;
+  password?: string;
 
   @Column({ default: null })
   @IsEmail({ message: 'Check if email is correct' })

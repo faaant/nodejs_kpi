@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { Product } from '@products/product.entity';
-import { validate } from 'class-validator';
 
 @Injectable()
 export class ProductsService {
@@ -33,24 +32,20 @@ export class ProductsService {
     )[0];
   }
 
-  async updateProduct(product: Product) {
-    const error = await validate(product, { skipMissingProperties: true });
-    if (error.length > 0) {
-      throw { message: 'Data is incorrect.' };
-    }
-    await this.productsRepository.update(product.id, product);
+  async updateProduct(product: Product): Promise<Product> {
+    await this.productsRepository.save(product);
+    return product;
   }
 
-  async deleteProduct(id: string) {
+  async deleteProduct(id: string): Promise<Product> {
+    const product: Product = await this.getProduct(id);
     await this.productsRepository.delete(id);
+    return product;
   }
 
-  async createProduct(product: Product) {
-    const error = await validate(product);
-    if (error.length > 0) {
-      throw { message: 'Data is incorrect.' };
-    }
+  async createProduct(product: Product): Promise<Product> {
     await this.productsRepository.create(product);
     await this.productsRepository.save(product);
+    return product;
   }
 }

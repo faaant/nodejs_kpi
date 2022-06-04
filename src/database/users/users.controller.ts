@@ -7,6 +7,9 @@ import {
   Param,
   Req,
   Res,
+  Body,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 
 import { UsersService } from '@users/users.service';
@@ -17,77 +20,40 @@ import { createUserObject } from './utils/user.functions';
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
+  @HttpCode(200)
   @Get()
-  getAll(@Res() res) {
-    return this.usersService
-      .getUsers()
-      .then((data) => {
-        return res.status(200).json(data);
-      })
-      .catch((error) => {
-        return res
-          .status(error?.message ? 400 : 500)
-          .json(error?.message || `Server error. Can't get users.`);
-      });
+  async getAll(): Promise<User[]> {
+    return await this.usersService.getUsers();
   }
 
+  @HttpCode(200)
   @Get(':id')
-  get(@Param() params, @Res() res) {
-    return this.usersService
-      .getUserById(params.id)
-      .then((data) => {
-        return res.status(200).json(data);
-      })
-      .catch((error) => {
-        return res
-          .status(error?.message ? 400 : 500)
-          .json(error?.message || `Server error. Can't get user.`);
-      });
+  async get(@Param() params: { id: string }): Promise<User> {
+    return await this.usersService.getUserById(params.id);
   }
 
+  @HttpCode(200)
   @Post()
-  async create(@Req() req, @Res() res) {
-    const user = new User();
-    createUserObject(req.body, user);
-    this.usersService
-      .createUser(user)
-      .then(() => {
-        return res.status(200).json(user);
-      })
-      .catch((error) => {
-        return res
-          .status(error?.message ? 400 : 500)
-          .json(error?.message || `Server error. Can't create user.`);
-      });
+  async create(@Body() user: User): Promise<User> {
+    const newUser = new User();
+    createUserObject(user, newUser);
+    return await this.usersService.createUser(newUser);
   }
 
+  @HttpCode(200)
   @Put(':id')
-  async updateCertainUser(@Param() params, @Req() req, @Res() res) {
-    const user: User = await this.usersService.getUserById(params.id);
-    createUserObject(req.body, user);
-    this.usersService
-      .updateUser(user)
-      .then(() => {
-        return res.status(200).json(user);
-      })
-      .catch((error) => {
-        return res
-          .status(error?.message ? 400 : 500)
-          .json(error?.message || `Server error. Can't update user.`);
-      });
+  async updateCertainUser(
+    @Param() params: { id: string },
+    @Body() user: User,
+  ): Promise<User> {
+    const updatedUser: User = await this.usersService.getUserById(params.id);
+    createUserObject(user, updatedUser);
+    return await this.usersService.updateUser(updatedUser);
   }
 
+  @HttpCode(200)
   @Delete(':id')
-  async deleteUser(@Param() params, @Res() res) {
-    return this.usersService
-      .deleteUser(params.id)
-      .then((data) => {
-        return res.status(200).json({ message: 'User successfully deleted' });
-      })
-      .catch((error) => {
-        return res
-          .status(error?.message ? 400 : 500)
-          .json(error?.message || `Server error. Can't delete user.`);
-      });
+  async deleteUser(@Param() params: { id: string }): Promise<User> {
+    return this.usersService.deleteUser(params.id);
   }
 }

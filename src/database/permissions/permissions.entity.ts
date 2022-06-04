@@ -5,8 +5,8 @@ export class Permission {
   @PrimaryGeneratedColumn({
     type: 'int',
   })
-  id: number;
+  id!: number;
 
   @Column()
-  permission: string;
+  permission!: string;
 }

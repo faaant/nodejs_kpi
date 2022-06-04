@@ -7,23 +7,23 @@ import { User } from '@users/user.entity';
 @Entity()
 export class UserProducts {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column()
   @IsNotEmpty({
     message: 'UserId must be not empty',
   })
-  userId: string;
+  userId?: string;
 
   @Column()
   @IsNotEmpty({
     message: 'ProductId must be not empty',
   })
-  productId: string;
+  productId?: string;
 
   @ManyToOne((type) => User, (user) => user)
-  user: User;
+  user?: User;
 
   @ManyToOne((type) => Product, (product) => product)
-  product: Product;
+  product?: Product;
 }

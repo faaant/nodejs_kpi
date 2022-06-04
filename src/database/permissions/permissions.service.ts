@@ -14,10 +14,12 @@ export class PermissionsService {
     return await this.permissionsRepository.find();
   }
 
-  getPermission(id: number): Promise<Permission> {
-    return this.permissionsRepository.find({
-      select: ['permission'],
-      where: [{ id }],
-    })[0];
+  async getPermission(id: number): Promise<Permission> {
+    return (
+      await this.permissionsRepository.find({
+        select: ['permission'],
+        where: [{ id }],
+      })
+    )[0];
   }
 }

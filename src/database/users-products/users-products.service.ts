@@ -32,20 +32,23 @@ export class UsersProductsService {
     });
   }
 
-  async addProduct(userProducts: UserProducts) {
-    const error = await validate(userProducts, { skipMissingProperties: true });
+  async addProduct(userProduct: UserProducts): Promise<UserProducts> {
+    const error = await validate(userProduct, { skipMissingProperties: true });
     if (error.length > 0) {
       throw { message: 'Data is incorrect.' };
     }
-    await this.pairsRepository.create(userProducts);
-    await this.pairsRepository.save(userProducts);
+
+    await this.pairsRepository.create(userProduct);
+    await this.pairsRepository.save(userProduct);
+    return userProduct;
   }
 
-  async deleteProduct(userProducts: UserProducts) {
-    const error = await validate(userProducts, { skipMissingProperties: true });
+  async deleteProduct(userProduct: UserProducts): Promise<UserProducts> {
+    const error = await validate(userProduct, { skipMissingProperties: true });
     if (error.length > 0) {
       throw { message: 'Data is incorrect.' };
     }
-    await this.pairsRepository.delete(userProducts);
+    await this.pairsRepository.delete(userProduct);
+    return userProduct;
   }
 }

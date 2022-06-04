@@ -45,7 +45,7 @@ export class UsersController {
 
   @HttpCode(200)
   @Post()
-  async create(@Body() user: User) {
+  async create(@Body() user: User): Promise<User> {
     const newUser = new User();
     createUserObject(user, newUser);
     return await this.usersService.createUser(newUser);
@@ -66,10 +66,12 @@ export class UsersController {
   //   }
   // }
 
-  @Permissions('update-certain-user')
-  @UseGuards(AuthGuard('jwt'), PermissionGuard)
+  @HttpCode(200)
   @Put(':id')
-  async updateCertainUser(@Param() params: { id: string }, @Body() user: User) {
+  async updateCertainUser(
+    @Param() params: { id: string },
+    @Body() user: User,
+  ): Promise<User> {
     const updatedUser: User = await this.usersService.getUserById(params.id);
     createUserObject(user, updatedUser);
     return await this.usersService.updateUser(updatedUser);
@@ -78,7 +80,7 @@ export class UsersController {
   @Permissions('delete-user')
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Delete(':id')
-  async deleteUser(@Param() params: { id: string }) {
+  async deleteUser(@Param() params: { id: string }): Promise<User> {
     return await this.usersService.deleteUser(params.id);
   }
 }

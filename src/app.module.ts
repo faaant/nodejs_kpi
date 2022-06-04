@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { HttpModule } from '@nestjs/axios';
 
@@ -9,7 +9,6 @@ import { UserPermissionsModule } from 'database/user-permissions/user-permission
 import { PermissionModule } from 'database/permissions/permissions.module';
 import { AuthModule } from '@auth/auth.module';
 import { SharedModule } from '@shared/shared.module';
-import { JwtinsertionMiddleware } from './middlewares/jwt-insertion.middleware';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import entities from './entities';
@@ -38,8 +37,4 @@ import entities from './entities';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(JwtinsertionMiddleware).exclude('auth/(.*)').forRoutes('*');
-  }
-}
+export class AppModule {}

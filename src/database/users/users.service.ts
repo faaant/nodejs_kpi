@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '@users/user.entity';
-import { UserPermissionsService } from '@user-permissions/user-permissions.service';
 import { validate } from 'class-validator';
+import { UserPermissionsService } from '@user-permissions/user-permissions.service';
 
 @Injectable()
 export class UsersService {
@@ -39,6 +39,9 @@ export class UsersService {
     if (error.length > 0) {
       throw { message: 'Data is incorrect.' };
     }
+    if (!user?.id) {
+      throw new BadRequestException();
+    }
     await this.usersRepository.update(user.id, user);
     return user;
   }
@@ -49,13 +52,12 @@ export class UsersService {
     return user;
   }
 
-  async createUser(user: User) {
-    const error = await validate(user, { skipMissingProperties: true });
-    if (error.length > 0) {
-      throw { message: 'Data is incorrect.' };
-    }
+  async createUser(user: User): Promise<User> {
     await this.usersRepository.create(user);
     await this.usersRepository.save(user);
+    if (!user?.id) {
+      throw new BadRequestException();
+    }
     await this.userPermissionsService.addDefaultUserPermissions(user.id);
     return user;
   }

@@ -1,9 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-
-import { Product } from '@products/product.entity';
 import { validate } from 'class-validator';
+import { Product } from '@products/product.entity';
 
 @Injectable()
 export class ProductsService {
@@ -38,6 +37,9 @@ export class ProductsService {
     if (error.length > 0) {
       throw { message: 'Data is incorrect.' };
     }
+    if (!product?.id) {
+      throw new BadRequestException();
+    }
     await this.productsRepository.update(product.id, product);
     return product;
   }
@@ -48,11 +50,7 @@ export class ProductsService {
     return product;
   }
 
-  async createProduct(product: Product) {
-    const error = await validate(product);
-    if (error.length > 0) {
-      throw { message: 'Data is incorrect.' };
-    }
+  async createProduct(product: Product): Promise<Product> {
     await this.productsRepository.create(product);
     await this.productsRepository.save(product);
     return product;

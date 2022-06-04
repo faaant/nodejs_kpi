@@ -2,7 +2,7 @@
 ## Tech stack
 <ol>
   <li>Nest</li>
-  <li>MySQL</li>
+  <li>PostgreSQL</li>
 </ol>
 
 ## Why
@@ -13,8 +13,11 @@
   <li>Nest CLI</li>
 </ul>
 
-### MySQL:
+### PostgreSQL:
 <ul>
   <li>Relative table structure</li>
-  <li>Experience in MySQL</li>
+  <li>Experience in relative databases</li>
 </ul>
+
+## Database schema
+![This is database schema](/docs/db_schema.png)

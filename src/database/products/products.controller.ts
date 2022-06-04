@@ -33,6 +33,8 @@ export class ProductsController {
 
   @Permissions('update-product')
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
+  @Permissions('update-product')
+  @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @HttpCode(200)
   @Put(':id')
   async updateProduct(
@@ -43,7 +45,7 @@ export class ProductsController {
       params.id,
     );
     createProductObject(product, updatedProduct);
-    return this.productsService.updateProduct(updatedProduct);
+    return await this.productsService.updateProduct(updatedProduct);
   }
 
   @Permissions('delete-product')
@@ -55,7 +57,7 @@ export class ProductsController {
   }
 
   @Get()
-  getAllProducts(): Promise<Product[]> {
-    return this.productsService.getProducts();
+  async getAllProducts(): Promise<Product[]> {
+    return await this.productsService.getProducts();
   }
 }

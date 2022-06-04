@@ -1,11 +1,11 @@
 import {
+  Body,
   Controller,
   Delete,
   Get,
+  HttpCode,
   Param,
   Post,
-  Req,
-  Res,
   UseGuards,
 } from '@nestjs/common';
 import { UserPermissions } from './user-permissions.entity';
@@ -21,73 +21,49 @@ export class UserPermissionsController {
 
   @Permissions('get-permissions-list')
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
+  @HttpCode(200)
   @Get()
-  getAll(@Res() res) {
-    console.log('here');
-    return this.userPermissionsService
-      .getAllPermissions()
-      .then((data) => {
-        return res.status(200).json(data);
-      })
-      .catch(() => {
-        return res.status(500).json({
-          message: 'Fail to get users and their permissions',
-        });
-      });
+  async getAll(): Promise<UserPermissions[]> {
+    return await this.userPermissionsService.getAllPermissions();
   }
 
   @Permissions('get-user-permissions')
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
+  @HttpCode(200)
   @Get(':id')
-  getUserPermissions(@Param() params, @Res() res) {
-    this.userPermissionsService.getUserPermissions(params.id).catch(() => {
-      return res.status(500).json({
-        message: 'Fail to get user permissions',
-      });
-    });
+  async getUserPermissions(
+    @Param() params: { id: string },
+  ): Promise<UserPermissions[]> {
+    return await this.userPermissionsService.getUserPermissions(params.id);
   }
 
   @Permissions('add-user-permission')
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
+  @HttpCode(200)
   @Post(':id')
-  addUserPermission(@Param() params, @Req() req, @Res() res) {
-    req.body.userId = params.id;
+  async addUserPermission(
+    @Param() params: { id: string },
+    @Body() body: UserPermissions,
+  ): Promise<UserPermissions> {
+    body.userId = params.id;
     const userPermission = new UserPermissions();
-    createUserPermissionObject(req.body, userPermission);
-    this.userPermissionsService
-      .addUserPermission(userPermission)
-      .then(() => {
-        return res.status(200).json({
-          message: 'User permission added',
-        });
-      })
-      .catch((error) => {
-        const statusCode = error?.message ? 400 : 500;
-        return res.status(statusCode).json({
-          message: error?.message ?? 'Fail to add user permission',
-        });
-      });
+    createUserPermissionObject(body, userPermission);
+    return await this.userPermissionsService.addUserPermission(userPermission);
   }
 
   @Permissions('delete-user-permission')
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
+  @HttpCode(200)
   @Delete(':id')
-  deleteUserPermission(@Param() params, @Req() req, @Res() res) {
-    req.body.userId = params.id;
+  async deleteUserPermission(
+    @Param() params: { id: string },
+    @Body() body: UserPermissions,
+  ): Promise<UserPermissions> {
+    body.userId = params.id;
     const userPermission = new UserPermissions();
-    createUserPermissionObject(req.body, userPermission);
-    this.userPermissionsService
-      .deleteUserPermission(userPermission)
-      .then(() => {
-        return res.status(200).json({
-          message: 'User permission deleted',
-        });
-      })
-      .catch((error) => {
-        const statusCode = error?.message ? 400 : 500;
-        return res.status(statusCode).json({
-          message: error?.message ?? 'Fail to delete user permission',
-        });
-      });
+    createUserPermissionObject(body, userPermission);
+    return await this.userPermissionsService.deleteUserPermission(
+      userPermission,
+    );
   }
 }

@@ -31,9 +31,12 @@ export class PermissionGuard implements CanActivate {
       for (const permission of neededPermissions) {
         if (
           !userPermissions.some((permissionId) => {
-            const userPermission = permisionsVocabulary.find(
-              (vocPermission) => vocPermission.id === permissionId.permissionId,
-            ).permission;
+            const userPermission = permisionsVocabulary
+              ? permisionsVocabulary.find(
+                  (vocPermission) =>
+                    vocPermission.id === permissionId.permissionId,
+                )?.permission
+              : null;
             return userPermission === permission;
           })
         ) {

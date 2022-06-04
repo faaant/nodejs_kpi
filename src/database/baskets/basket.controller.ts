@@ -1,12 +1,4 @@
-import {
-  Controller,
-  Delete,
-  Get,
-  Post,
-  Req,
-  Res,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Delete, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { JWTTokenService } from '@shared/services/jwt-token.service';
 import { Permissions } from '@shared/decorators/permissions.decorator';
@@ -14,6 +6,7 @@ import { PermissionGuard } from '@guards/permission.guard';
 import { createBasketObject } from '@baskets/utils/baskets.functions';
 import { Baskets } from '@baskets/baskets.entity';
 import { BasketsService } from '@baskets/baskets.service';
+import { Request } from 'express';
 
 @Controller('basket')
 export class BasketController {
@@ -25,21 +18,19 @@ export class BasketController {
   @Permissions('get-user-products')
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Get()
-  getProducts(@Req() req, @Res() res) {
+  async getProducts(@Req() req: Request) {
     const jwtData = this.jwtTokenService.decode(
       req.headers['authorization'].split(' ')[1],
     );
     if (typeof jwtData === 'object') {
-      return this.basketsService.getBaskets(jwtData?.id).then((data) => {
-        return res.status(200).json(data);
-      });
+      return await this.basketsService.getBaskets(jwtData?.id);
     }
   }
 
   @Permissions('delete-user-product')
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Delete()
-  deleteProduct(@Req() req, @Res() res) {
+  async deleteProduct(@Req() req: Request) {
     const jwtData = this.jwtTokenService.decode(
       req.headers['authorization'].split(' ')[1],
     );
@@ -47,18 +38,14 @@ export class BasketController {
       req.body.userId = jwtData.id;
       const userProduct = new Baskets();
       createBasketObject(req.body, userProduct);
-      return this.basketsService.deleteProduct(userProduct).then(() => {
-        return res.status(200).json({
-          message: 'Product deleted',
-        });
-      });
+      return await this.basketsService.deleteProduct(userProduct);
     }
   }
 
   @Permissions(`add-user-product`)
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Post()
-  addProduct(@Req() req, @Res() res) {
+  async addProduct(@Req() req: Request) {
     const jwtData = this.jwtTokenService.decode(
       req.headers['authorization'].split(' ')[1],
     );
@@ -66,11 +53,7 @@ export class BasketController {
       req.body.userId = jwtData.id;
       const userProduct = new Baskets();
       createBasketObject(req.body, userProduct);
-      return this.basketsService.addProduct(userProduct).then(() => {
-        return res.status(200).json({
-          message: 'Product added',
-        });
-      });
+      return await this.basketsService.addProduct(userProduct);
     }
   }
 }

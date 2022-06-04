@@ -8,7 +8,6 @@ import { UserPermissionsModule } from 'database/user-permissions/user-permission
 import { PermissionModule } from 'database/permissions/permissions.module';
 import { AuthModule } from '@auth/auth.module';
 import { SharedModule } from '@shared/shared.module';
-import { JwtinsertionMiddleware } from './middlewares/jwt-insertion.middleware';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import entities from './entities';
@@ -49,7 +48,6 @@ import { AllExceptionsFilter } from 'filters/exceptions.filter';
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(JwtinsertionMiddleware).exclude('auth/(.*)').forRoutes('*');
     consumer.apply(LoggerMiddleware).forRoutes('*');
   }
 }

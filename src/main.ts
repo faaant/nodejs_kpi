@@ -1,8 +1,8 @@
 import { NestFactory } from '@nestjs/core';
-import { AllExceptionsFilter } from 'filters/exceptions.filter';
 import { WinstonModule } from 'nest-winston';
 import * as winston from 'winston';
 import { AppModule } from './app.module';
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -34,7 +34,7 @@ async function bootstrap() {
           format: 'DD/MM/YYYY, HH:mm:ss',
         }),
         winston.format.printf(
-          (text) =>
+          (text: any) =>
             `[Nest]  - ${[text.timestamp]}  [${text.context}] :  ${
               text.level
             }: ${text.message}`,
@@ -42,7 +42,7 @@ async function bootstrap() {
       ),
     }),
   });
-
+  app.use(cookieParser());
   await app.listen(3000);
 }
 bootstrap();

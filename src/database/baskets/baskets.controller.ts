@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Delete,
   Get,
@@ -22,46 +23,34 @@ export class BasketsController {
   @Permissions('get-baskets')
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Get()
-  getAll(@Res() res) {
-    return this.basketsService.getAll().then((data) => {
-      return res.status(200).json(data);
-    });
+  async getAll() {
+    return await this.basketsService.getAll();
   }
 
   @Permissions('get-certain-user-products')
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Get(':id')
-  getBaskets(@Param() params, @Res() res) {
-    return this.basketsService.getBaskets(params.id).then((data) => {
-      return res.status(200).json(data);
-    });
+  async getBaskets(@Param() params: { id: string }) {
+    return await this.basketsService.getBaskets(params.id);
   }
 
   @Permissions(`add-product-to-certain-user`)
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Post(':id')
-  addBasket(@Param() params, @Req() req, @Res() res) {
-    req.body.userId = params.id;
+  async addBasket(@Param() params: { id: string }, @Body() body: Baskets) {
+    body.userId = params.id;
     const basket = new Baskets();
-    createBasketObject(req.body, basket);
-    return this.basketsService.addProduct(basket).then(() => {
-      return res.status(200).json({
-        message: 'Product added',
-      });
-    });
+    createBasketObject(body, basket);
+    return await this.basketsService.addProduct(basket);
   }
 
   @Permissions(`delete-product-from-certain-user`)
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Delete(':id')
-  deleteBasket(@Param() params, @Req() req, @Res() res) {
-    req.body.userId = params.id;
+  async deleteBasket(@Param() params: { id: string }, @Body() body: Baskets) {
+    body.userId = params.id;
     const basket = new Baskets();
-    createBasketObject(req.body, basket);
-    return this.basketsService.deleteProduct(basket).then(() => {
-      return res.status(200).json({
-        message: 'Product deleted',
-      });
-    });
+    createBasketObject(body, basket);
+    return await this.basketsService.deleteProduct(basket);
   }
 }

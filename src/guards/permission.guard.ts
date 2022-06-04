@@ -20,20 +20,22 @@ export class PermissionGuard implements CanActivate {
     );
 
     const req = context.switchToHttp().getRequest();
-    const body = this.jwtTokenService.decode(
-      req.headers['authorization'].split(' ')[1],
-    );
+    const body = this.jwtTokenService.decode(req.cookies?.jwt);
     if (typeof body === 'object') {
       const userPermissions =
         await this.userPermissionService.getUserPermissions(body?.id);
       const permisionsVocabulary =
         await this.permissionsService.getPermissions();
+
       for (const permission of neededPermissions) {
         if (
           !userPermissions.some((permissionId) => {
-            const userPermission = permisionsVocabulary.find(
-              (vocPermission) => vocPermission.id === permissionId.permissionId,
-            ).permission;
+            const userPermission = permisionsVocabulary
+              ? permisionsVocabulary.find(
+                  (vocPermission) =>
+                    vocPermission.id === permissionId.permissionId,
+                )?.permission
+              : null;
             return userPermission === permission;
           })
         ) {

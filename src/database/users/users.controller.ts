@@ -8,6 +8,7 @@ import {
   Req,
   Res,
   UseGuards,
+  Body,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
@@ -16,6 +17,7 @@ import { User } from '@users/user.entity';
 import { createUserObject } from '@users/utils/user.functions';
 import { Permissions } from '@shared/decorators/permissions.decorator';
 import { PermissionGuard } from '@guards/permission.guard';
+import { Request } from 'express';
 
 @Controller('users')
 export class UsersController {
@@ -24,47 +26,40 @@ export class UsersController {
   @Permissions('get-users')
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Get()
-  getAll(@Res() res) {
-    return this.usersService.getUsers().then((data) => {
-      return res.status(200).json(data);
-    });
+  async getAll() {
+    return await this.usersService.getUsers();
   }
 
   @Permissions('get-user')
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Get(':id')
-  get(@Param() params, @Res() res) {
-    return this.usersService.getUserById(params.id).then((data) => {
-      return res.status(200).json(data);
-    });
+  async get(@Param() params: { id: string }) {
+    return await this.usersService.getUserById(params.id);
   }
 
   @Post()
-  async create(@Req() req, @Res() res) {
+  async create(@Body() body: User) {
     const user = new User();
-    createUserObject(req.body, user);
-    return this.usersService.createUser(user).then(() => {
-      return res.status(200).json(user);
-    });
+    createUserObject(body, user);
+    return await this.usersService.createUser(user);
   }
 
   @Permissions('update-certain-user')
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Put(':id')
-  async updateCertainUser(@Param() params, @Req() req, @Res() res) {
+  async updateCertainUser(
+    @Param() params: { id: string },
+    @Req() req: Request,
+  ) {
     const user: User = await this.usersService.getUserById(params.id);
     createUserObject(req.body, user);
-    return this.usersService.updateUser(user).then(() => {
-      return res.status(200).json(user);
-    });
+    return await this.usersService.updateUser(user);
   }
 
   @Permissions('delete-user')
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Delete(':id')
-  async deleteUser(@Param() params, @Res() res) {
-    return this.usersService.deleteUser(params.id).then(() => {
-      return res.status(200).json({ message: 'User successfully deleted' });
-    });
+  async deleteUser(@Param() params: { id: string }) {
+    return await this.usersService.deleteUser(params.id);
   }
 }

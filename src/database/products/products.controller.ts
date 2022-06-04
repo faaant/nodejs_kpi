@@ -16,6 +16,7 @@ import { Product } from '@products/product.entity';
 import { ProductsService } from '@products/products.service';
 import { Permissions } from '@shared/decorators/permissions.decorator';
 import { createProductObject } from '@products/utils/product.functions';
+import { Request } from 'express';
 
 @Controller('products')
 export class ProductsController {
@@ -24,38 +25,30 @@ export class ProductsController {
   @Permissions('create-product')
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Post()
-  createProduct(@Req() req, @Res() res) {
+  async createProduct(@Req() req: Request) {
     const product = new Product();
     createProductObject(req.body, product);
-    return this.productsService.createProduct(product).then(() => {
-      return res.status(200).json(product);
-    });
+    return await this.productsService.createProduct(product);
   }
 
   @Permissions('update-product')
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Put(':id')
-  async updateProduct(@Param() params, @Req() req, @Res() res) {
+  async updateProduct(@Param() params: { id: string }, @Req() req: Request) {
     const product: Product = await this.productsService.getProduct(params.id);
     createProductObject(req.body, product);
-    return this.productsService.updateProduct(product).then(() => {
-      return res.status(200).json(product);
-    });
+    return await this.productsService.updateProduct(product);
   }
 
   @Permissions('delete-product')
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Delete(':id')
-  deleteProduct(@Param() params, @Res() res) {
-    return this.productsService.deleteProduct(params.id).then(() => {
-      return res.status(200).json({ message: 'Product successfully deleted' });
-    });
+  async deleteProduct(@Param() params: { id: string }) {
+    return await this.productsService.deleteProduct(params.id);
   }
 
   @Get()
-  getAllProducts(@Res() res): Promise<Product[]> {
-    return this.productsService.getProducts().then((data) => {
-      return res.status(200).json(data);
-    });
+  async getAllProducts(): Promise<Product[]> {
+    return await this.productsService.getProducts();
   }
 }

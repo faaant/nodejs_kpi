@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Delete,
   Get,
@@ -22,52 +23,42 @@ export class UserPermissionsController {
   @Permissions('get-permissions-list')
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Get()
-  getAll(@Res() res) {
-    return this.userPermissionsService.getAllPermissions().then((data) => {
-      return res.status(200).json(data);
-    });
+  async getAll() {
+    return await this.userPermissionsService.getAllPermissions();
   }
 
   @Permissions('get-user-permissions')
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Get(':id')
-  getUserPermissions(@Param() params, @Res() res) {
-    return this.userPermissionsService
-      .getUserPermissions(params.id)
-      .then((data) => {
-        return res.status(200).json(data);
-      });
+  async getUserPermissions(@Param() params: { id: string }) {
+    return await this.userPermissionsService.getUserPermissions(params.id);
   }
 
   @Permissions('add-user-permission')
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Post(':id')
-  addUserPermission(@Param() params, @Req() req, @Res() res) {
-    req.body.userId = params.id;
+  async addUserPermission(
+    @Param() params: { id: string },
+    @Body() body: UserPermissions,
+  ) {
+    body.userId = params.id;
     const userPermission = new UserPermissions();
-    createUserPermissionObject(req.body, userPermission);
-    return this.userPermissionsService
-      .addUserPermission(userPermission)
-      .then(() => {
-        return res.status(200).json({
-          message: 'User permission added',
-        });
-      });
+    createUserPermissionObject(body, userPermission);
+    return await this.userPermissionsService.addUserPermission(userPermission);
   }
 
   @Permissions('delete-user-permission')
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Delete(':id')
-  deleteUserPermission(@Param() params, @Req() req, @Res() res) {
-    req.body.userId = params.id;
+  async deleteUserPermission(
+    @Param() params: { id: string },
+    @Body() body: UserPermissions,
+  ) {
+    body.userId = params.id;
     const userPermission = new UserPermissions();
-    createUserPermissionObject(req.body, userPermission);
-    return this.userPermissionsService
-      .deleteUserPermission(userPermission)
-      .then(() => {
-        return res.status(200).json({
-          message: 'User permission deleted',
-        });
-      });
+    createUserPermissionObject(body, userPermission);
+    return await this.userPermissionsService.deleteUserPermission(
+      userPermission,
+    );
   }
 }

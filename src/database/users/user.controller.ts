@@ -1,11 +1,12 @@
 import { PermissionGuard } from '@guards/permission.guard';
-import { Controller, Put, Req, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Put, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Permissions } from '@shared/decorators/permissions.decorator';
 import { JWTTokenService } from '@shared/services/jwt-token.service';
 import { User } from '@users/user.entity';
 import { UsersService } from '@users/users.service';
 import { createUserObject } from '@users/utils/user.functions';
+import { Request } from 'express';
 
 @Controller('user')
 export class UserController {
@@ -16,18 +17,12 @@ export class UserController {
   @Permissions('update-user')
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Put('profile')
-  async update(@Req() req, @Res() res) {
-    const jwtData = this.jwtTokenService.decode(
-      req.headers['authorization'].split(' ')[1],
-    );
+  async update(@Req() req: Request, @Body() body: User) {
+    const jwtData = this.jwtTokenService.decode(req.cookies?.jwt);
     if (typeof jwtData === 'object') {
-      const user: User = await this.usersService.getUser(jwtData.username);
+      const user: User = await this.usersService.getUser(jwtData?.username);
       createUserObject(req.body, user);
-      return this.usersService.updateUser(user).then(() => {
-        return res.status(200).json({
-          message: 'User updated',
-        });
-      });
+      return await this.usersService.updateUser(user);
     }
   }
 }

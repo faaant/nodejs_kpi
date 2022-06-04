@@ -32,16 +32,20 @@ export class ProductsService {
     )[0];
   }
 
-  async updateProduct(product: Product) {
-    await this.productsRepository.update(product.id, product);
+  async updateProduct(product: Product): Promise<Product> {
+    await this.productsRepository.save(product);
+    return product;
   }
 
-  async deleteProduct(id: string) {
+  async deleteProduct(id: string): Promise<Product> {
+    const product: Product = await this.getProduct(id);
     await this.productsRepository.delete(id);
+    return product;
   }
 
-  async createProduct(product: Product) {
+  async createProduct(product: Product): Promise<Product> {
     await this.productsRepository.create(product);
     await this.productsRepository.save(product);
+    return product;
   }
 }

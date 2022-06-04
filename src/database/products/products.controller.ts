@@ -1,7 +1,9 @@
 import {
+  Body,
   Controller,
   Delete,
   Get,
+  HttpCode,
   Param,
   Post,
   Put,
@@ -17,65 +19,35 @@ import { createProductObject } from './utils/product.functions';
 export class ProductsController {
   constructor(private productsService: ProductsService) {}
 
+  @HttpCode(200)
   @Post()
-  createProduct(@Req() req, @Res() res) {
-    const product = new Product();
-    createProductObject(req.body, product);
-    this.productsService
-      .createProduct(product)
-      .then(() => {
-        return res.status(200).json(product);
-      })
-      .catch((error) => {
-        return res
-          .status(error?.message ? 400 : 500)
-          .json(error?.message || 'Server error. Product have not created.');
-      });
+  createProduct(@Body() product: Product): Promise<Product> {
+    const newProduct = new Product();
+    createProductObject(product, newProduct);
+    return this.productsService.createProduct(newProduct);
   }
 
+  @HttpCode(200)
   @Put(':id')
-  async updateProduct(@Param() params, @Req() req, @Res() res) {
-    const product: Product = await this.productsService.getProduct(params.id);
-    createProductObject(req.body, product);
-    this.productsService
-      .updateProduct(product)
-      .then(() => {
-        return res.status(200).json(product);
-      })
-      .catch((error) => {
-        return res
-          .status(error?.message ? 400 : 500)
-          .json(error?.message || 'Server error. Product have not updated.');
-      });
+  async updateProduct(
+    @Param() params: any,
+    @Body() product: Product,
+  ): Promise<Product> {
+    const updatedProduct: Product = await this.productsService.getProduct(
+      params.id,
+    );
+    createProductObject(product, updatedProduct);
+    return this.productsService.updateProduct(updatedProduct);
   }
 
+  @HttpCode(200)
   @Delete(':id')
-  deleteProduct(@Param() params, @Res() res): void {
-    this.productsService
-      .deleteProduct(params.id)
-      .then(() => {
-        return res
-          .status(200)
-          .json({ message: 'Product successfully deleted' });
-      })
-      .catch((error) => {
-        return res
-          .status(error?.message ? 400 : 500)
-          .json(error?.message || 'Server error. Product have not deleted.');
-      });
+  async deleteProduct(@Param() params: any): Promise<Product> {
+    return await this.productsService.deleteProduct(params.id);
   }
 
   @Get()
-  getAllProducts(@Res() res): Promise<Product[]> {
-    return this.productsService
-      .getProducts()
-      .then((data) => {
-        return res.status(200).json(data);
-      })
-      .catch((error) => {
-        return res
-          .status(error?.message ? 400 : 500)
-          .json(error?.message || `Server error. Can't get products.`);
-      });
+  getAllProducts(): Promise<Product[]> {
+    return this.productsService.getProducts();
   }
 }

@@ -3,13 +3,13 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 @Entity()
 export class User {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id?: string;
 
   @Column({ unique: true })
-  username: string;
+  username?: string;
 
   @Column()
-  password: string;
+  password?: string;
 
   @Column({ default: null })
   email?: string;

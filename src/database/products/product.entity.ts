@@ -3,26 +3,26 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 @Entity()
 export class Product {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id?: string;
 
   @Column({ unique: true })
-  productName: string;
+  productName?: string;
 
   @Column()
-  price: number;
+  price?: number;
 
   @Column('real')
-  weight: number;
+  weight?: number;
 
   @Column()
-  count: number;
+  count?: number;
 
   @Column()
-  CPU: string;
+  CPU?: string;
 
   @Column()
-  RAM: number;
+  RAM?: number;
 
   @Column()
-  resolution: string;
+  resolution?: string;
 }

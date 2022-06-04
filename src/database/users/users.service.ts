@@ -32,15 +32,19 @@ export class UsersService {
   }
 
   async updateUser(user: User) {
-    await this.usersRepository.update(user.id, user);
+    await this.usersRepository.save(user);
+    return user;
   }
 
   async deleteUser(id: string) {
+    const user: User = await this.getUserById(id);
     await this.usersRepository.delete(id);
+    return user;
   }
 
   async createUser(user: User) {
     await this.usersRepository.create(user);
     await this.usersRepository.save(user);
+    return user;
   }
 }

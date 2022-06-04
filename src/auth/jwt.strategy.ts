@@ -10,10 +10,22 @@ dotenv.config();
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(private usersService: UsersService) {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      jwtFromRequest: JwtStrategy.extractJWT,
       ignoreExpiration: false,
       secretOrKey: process.env.SECRET,
     });
+  }
+
+  private static extractJWT(req: Request): string | null {
+    const cookies = req.headers.get('Cookie');
+    console.log('cookies');
+    if (cookies) {
+      const cookiesObj = cookies.split(';').map((el: any) => el.split('='))
+        ? Object.fromEntries(cookies.split(';').map((el: any) => el.split('=')))
+        : null;
+      return cookiesObj?.jwt ? cookiesObj.jwt : null;
+    }
+    return null;
   }
 
   async validate(payload: any) {

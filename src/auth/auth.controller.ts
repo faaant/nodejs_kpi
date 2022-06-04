@@ -1,25 +1,19 @@
-import { Controller, Req, Post, Res } from '@nestjs/common';
+import { Controller, Post, Res, Body, HttpCode } from '@nestjs/common';
 import { AuthService } from '@auth/auth.service';
 
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
+  @HttpCode(200)
   @Post('login')
-  login(@Req() req, @Res() res) {
-    this.authService
-      .login(req.body)
-      .then((jwtToken) => {
-        res.cookie('jwt', jwtToken.access_token, {
-          httpOnly: true,
-          sameSite: true,
-        });
-        return res.status(200).json(jwtToken);
-      })
-      .catch(() => {
-        return res.status(400).json({
-          message: 'Not valid user',
-        });
-      });
+  login(
+    @Body() body: { username: string; password: string },
+    @Res() res: Response,
+  ) {
+    this.authService.login(body).then((jwtToken) => {
+      res.headers.append('Cookie', `jwt=${jwtToken?.access_token}`);
+      return res.json();
+    });
   }
 }

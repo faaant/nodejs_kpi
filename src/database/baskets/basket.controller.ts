@@ -1,4 +1,12 @@
-import { Controller, Delete, Get, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  Get,
+  Post,
+  Req,
+  UseGuards,
+  HttpCode,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { JWTTokenService } from '@shared/services/jwt-token.service';
 import { Permissions } from '@shared/decorators/permissions.decorator';
@@ -15,20 +23,22 @@ export class BasketController {
     private jwtTokenService: JWTTokenService,
   ) {}
 
+  @HttpCode(200)
   @Permissions('get-user-products')
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Get()
-  async getProducts(@Req() req: Request) {
+  async getProducts(@Req() req: Request): Promise<Baskets[] | undefined> {
     const jwtData = this.jwtTokenService.decode(req.cookies?.jwt);
     if (typeof jwtData === 'object') {
       return this.basketsService.getBaskets(jwtData?.id);
     }
   }
 
+  @HttpCode(200)
   @Permissions('delete-user-product')
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Delete()
-  async deleteProduct(@Req() req: Request) {
+  async deleteProduct(@Req() req: Request): Promise<Baskets | undefined> {
     const jwtData = this.jwtTokenService.decode(req.cookies?.jwt);
     if (typeof jwtData === 'object') {
       req.body.userId = jwtData?.id;
@@ -38,10 +48,11 @@ export class BasketController {
     }
   }
 
+  @HttpCode(200)
   @Permissions(`add-user-product`)
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Post()
-  async addProduct(@Req() req: Request) {
+  async addProduct(@Req() req: Request): Promise<Baskets | undefined> {
     const jwtData = this.jwtTokenService.decode(req.cookies?.jwt);
     if (typeof jwtData === 'object') {
       req.body.userId = jwtData?.id;

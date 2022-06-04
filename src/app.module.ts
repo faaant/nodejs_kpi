@@ -19,14 +19,17 @@ import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     HttpModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: 'root',
-      database: 'store',
+      host: process.env.HOST_DB,
+      port: parseInt(process.env.PORT_DB || '5432', 10),
+      username: process.env.USERNAME_DB,
+      password: process.env.PASSWORD_DB,
+      database: process.env.NAME_DB,
       entities: entities,
       synchronize: true,
     }),
@@ -37,9 +40,6 @@ import { ConfigModule } from '@nestjs/config';
     PermissionModule,
     AuthModule,
     SharedModule,
-    ConfigModule.forRoot({
-      envFilePath: 'src/.env',
-    }),
   ],
   controllers: [AppController],
   providers: [

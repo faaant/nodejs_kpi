@@ -8,6 +8,8 @@ import { AuthController } from '@auth/auth.controller';
 import { JwtStrategy } from '@auth/jwt.strategy';
 import { AuthService } from '@auth//auth.service';
 import { SharedModule } from '@shared/shared.module';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 @Module({
   imports: [

@@ -5,8 +5,6 @@ import {
   Get,
   Param,
   Post,
-  Req,
-  Res,
   UseGuards,
 } from '@nestjs/common';
 import { UserPermissions } from '@user-permissions/user-permissions.entity';
@@ -24,14 +22,14 @@ export class UserPermissionsController {
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Get()
   async getAll() {
-    return await this.userPermissionsService.getAllPermissions();
+    return this.userPermissionsService.getAllPermissions();
   }
 
   @Permissions('get-user-permissions')
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Get(':id')
   async getUserPermissions(@Param() params: { id: string }) {
-    return await this.userPermissionsService.getUserPermissions(params.id);
+    return this.userPermissionsService.getUserPermissions(params.id);
   }
 
   @Permissions('add-user-permission')
@@ -44,7 +42,7 @@ export class UserPermissionsController {
     body.userId = params.id;
     const userPermission = new UserPermissions();
     createUserPermissionObject(body, userPermission);
-    return await this.userPermissionsService.addUserPermission(userPermission);
+    return this.userPermissionsService.addUserPermission(userPermission);
   }
 
   @Permissions('delete-user-permission')
@@ -57,8 +55,6 @@ export class UserPermissionsController {
     body.userId = params.id;
     const userPermission = new UserPermissions();
     createUserPermissionObject(body, userPermission);
-    return await this.userPermissionsService.deleteUserPermission(
-      userPermission,
-    );
+    return this.userPermissionsService.deleteUserPermission(userPermission);
   }
 }

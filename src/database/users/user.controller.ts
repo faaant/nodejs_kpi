@@ -1,5 +1,5 @@
 import { PermissionGuard } from '@guards/permission.guard';
-import { Body, Controller, Put, Req, UseGuards } from '@nestjs/common';
+import { Controller, Put, Req, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Permissions } from '@shared/decorators/permissions.decorator';
 import { JWTTokenService } from '@shared/services/jwt-token.service';
@@ -14,6 +14,7 @@ export class UserController {
     private usersService: UsersService,
     private jwtTokenService: JWTTokenService,
   ) {}
+
   @Permissions('update-user')
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Put('profile')
@@ -22,7 +23,7 @@ export class UserController {
     if (typeof jwtData === 'object') {
       const user: User = await this.usersService.getUser(jwtData?.username);
       createUserObject(req.body, user);
-      return await this.usersService.updateUser(user);
+      return this.usersService.updateUser(user);
     }
   }
 }

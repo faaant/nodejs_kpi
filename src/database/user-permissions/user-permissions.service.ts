@@ -19,25 +19,34 @@ export class UserPermissionsService {
   ) {}
 
   async getAllPermissions(): Promise<UserPermissions[]> {
-    return await this.userPermissionsRepository.find();
+    return this.userPermissionsRepository.find();
   }
 
   async getUserPermissions(userId: string): Promise<UserPermissions[]> {
-    return await this.userPermissionsRepository.find({
+    return this.userPermissionsRepository.find({
       select: ['permissionId'],
       where: [{ userId }],
     });
   }
 
-  async deleteUserPermission(userPermission: UserPermissions) {
+  async deleteUserPermission(
+    userPermission: UserPermissions,
+  ): Promise<UserPermissions> {
     await this.userPermissionsRepository.delete(userPermission);
+    return userPermission;
   }
 
-  async deleteAllPermissions(userId: string) {
+  async deleteAllPermissions(userId: string): Promise<UserPermissions[]> {
+    const userPermissions: UserPermissions[] = await this.getUserPermissions(
+      userId,
+    );
     await this.userPermissionsRepository.delete({ userId });
+    return userPermissions;
   }
 
-  async addUserPermission(userPermission: UserPermissions) {
+  async addUserPermission(
+    userPermission: UserPermissions,
+  ): Promise<UserPermissions> {
     const error = await validate(userPermission, {
       skipMissingProperties: true,
     });
@@ -46,14 +55,20 @@ export class UserPermissionsService {
     }
     await this.userPermissionsRepository.create(userPermission);
     await this.userPermissionsRepository.save(userPermission);
+    return userPermission;
   }
 
-  async addDefaultUserPermissions(userId: string) {
+  async addPermissions(userId: string, role = 'user'): Promise<void> {
     const permissions: Permission[] =
       await this.permissionsService.getPermissions();
-    const newUserPermissions: UserPermissions[] = permissions.map(
+    const addedPermissions: string[] =
+      role === 'user' ? defaultPermissions : adminPermissions;
+    const newUserPermissions: (UserPermissions | undefined)[] = permissions.map(
       (permission) => {
-        if (defaultPermissions.indexOf(permission.permission) != -1) {
+        if (!permission?.permission) {
+          throw new BadRequestException();
+        }
+        if (addedPermissions.indexOf(permission.permission) != -1) {
           const newUserPermission = new UserPermissions();
           newUserPermission.permissionId = permission.id;
           newUserPermission.userId = userId;
@@ -62,27 +77,6 @@ export class UserPermissionsService {
       },
     );
     newUserPermissions.forEach((newUserPermission) => {
-      if (newUserPermission) {
-        this.userPermissionsRepository.create(newUserPermission);
-        this.userPermissionsRepository.save(newUserPermission);
-      }
-    });
-  }
-
-  async addAdminPermissions(userId: string) {
-    const permissions: Permission[] =
-      await this.permissionsService.getPermissions();
-    const adminUserPermissions: UserPermissions[] = permissions.map(
-      (permission) => {
-        if (adminPermissions.indexOf(permission.permission) != -1) {
-          const newUserPermission = new UserPermissions();
-          newUserPermission.permissionId = permission.id;
-          newUserPermission.userId = userId;
-          return newUserPermission;
-        }
-      },
-    );
-    adminUserPermissions.forEach((newUserPermission) => {
       if (newUserPermission) {
         this.userPermissionsRepository.create(newUserPermission);
         this.userPermissionsRepository.save(newUserPermission);

@@ -15,6 +15,7 @@ import { LoggerMiddleware } from 'middlewares/logger.middleware';
 import { BasketsModule } from '@baskets/baskets.module';
 import { APP_FILTER } from '@nestjs/core';
 import { AllExceptionsFilter } from 'filters/exceptions.filter';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -36,6 +37,9 @@ import { AllExceptionsFilter } from 'filters/exceptions.filter';
     PermissionModule,
     AuthModule,
     SharedModule,
+    ConfigModule.forRoot({
+      envFilePath: 'src/.env',
+    }),
   ],
   controllers: [AppController],
   providers: [

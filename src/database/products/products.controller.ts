@@ -27,7 +27,7 @@ export class ProductsController {
   async createProduct(@Req() req: Request) {
     const product = new Product();
     createProductObject(req.body, product);
-    return await this.productsService.createProduct(product);
+    return this.productsService.createProduct(product);
   }
 
   @Permissions('update-product')
@@ -36,18 +36,18 @@ export class ProductsController {
   async updateProduct(@Param() params: { id: string }, @Req() req: Request) {
     const product: Product = await this.productsService.getProduct(params.id);
     createProductObject(req.body, product);
-    return await this.productsService.updateProduct(product);
+    return this.productsService.updateProduct(product);
   }
 
   @Permissions('delete-product')
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Delete(':id')
   async deleteProduct(@Param() params: { id: string }) {
-    return await this.productsService.deleteProduct(params.id);
+    return this.productsService.deleteProduct(params.id);
   }
 
   @Get()
   async getAllProducts(): Promise<Product[]> {
-    return await this.productsService.getProducts();
+    return this.productsService.getProducts();
   }
 }

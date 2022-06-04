@@ -22,14 +22,14 @@ export class BasketsController {
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Get()
   async getAll() {
-    return await this.basketsService.getAll();
+    return this.basketsService.getAll();
   }
 
   @Permissions('get-certain-user-products')
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Get(':id')
   async getBaskets(@Param() params: { id: string }) {
-    return await this.basketsService.getBaskets(params.id);
+    return this.basketsService.getBaskets(params.id);
   }
 
   @Permissions(`add-product-to-certain-user`)
@@ -39,7 +39,7 @@ export class BasketsController {
     body.userId = params.id;
     const basket = new Baskets();
     createBasketObject(body, basket);
-    return await this.basketsService.addProduct(basket);
+    return this.basketsService.addProduct(basket);
   }
 
   @Permissions(`delete-product-from-certain-user`)
@@ -49,6 +49,6 @@ export class BasketsController {
     body.userId = params.id;
     const basket = new Baskets();
     createBasketObject(body, basket);
-    return await this.basketsService.deleteProduct(basket);
+    return this.basketsService.deleteProduct(basket);
   }
 }

@@ -11,13 +11,13 @@ export class AuthService {
 
   async validateUser(username: string, pass: string): Promise<boolean> {
     const user = await this.usersService.getUser(username);
-    if (user && user.password === pass) {
-      return true;
-    }
-    return false;
+    return user && user.password === pass;
   }
 
-  async login(user: { username: string; password: string }) {
+  async login(user: {
+    username: string;
+    password: string;
+  }): Promise<{ access_token: string }> {
     if (await this.validateUser(user.username, user.password)) {
       const userInfo = await this.usersService.getUser(user.username);
       const payload = {

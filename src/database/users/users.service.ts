@@ -13,7 +13,7 @@ export class UsersService {
   ) {}
 
   async getUsers(): Promise<User[]> {
-    return await this.usersRepository.find();
+    return this.usersRepository.find();
   }
 
   async getUser(username: string): Promise<User> {
@@ -34,26 +34,36 @@ export class UsersService {
     )[0];
   }
 
-  async updateUser(user: User) {
+  async updateUser(user: User): Promise<User> {
     const error = await validate(user, { skipMissingProperties: true });
     if (error.length > 0) {
       throw new BadRequestException();
     }
+    if (!user?.id) {
+      throw new BadRequestException();
+    }
     await this.usersRepository.update(user.id, user);
+    return user;
   }
 
-  async deleteUser(id: string) {
+  async deleteUser(id: string): Promise<User> {
+    const user: User = await this.getUserById(id);
     this.userPermissionsService.deleteAllPermissions(id);
     await this.usersRepository.delete(id);
+    return user;
   }
 
-  async createUser(user: User) {
+  async createUser(user: User): Promise<User> {
     const error = await validate(user, { skipMissingProperties: true });
     if (error.length > 0) {
       throw new BadRequestException();
     }
     await this.usersRepository.create(user);
     await this.usersRepository.save(user);
-    await this.userPermissionsService.addDefaultUserPermissions(user.id);
+    if (!user?.id) {
+      throw new BadRequestException();
+    }
+    await this.userPermissionsService.addPermissions(user?.id);
+    return user;
   }
 }

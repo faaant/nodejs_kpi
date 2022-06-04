@@ -13,6 +13,7 @@ export class PermissionGuard implements CanActivate {
     private userPermissionService: UserPermissionsService,
     private permissionsService: PermissionsService,
   ) {}
+
   async canActivate(context: ExecutionContext) {
     const neededPermissions = this.reflector.get<string[]>(
       'permissions',

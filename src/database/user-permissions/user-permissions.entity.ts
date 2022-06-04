@@ -6,23 +6,23 @@ import { IsNotEmpty } from 'class-validator';
 @Entity()
 export class UserPermissions {
   @PrimaryGeneratedColumn()
-  id: number;
+  id?: number;
 
   @Column()
   @IsNotEmpty({
     message: 'UserId must be not empty',
   })
-  userId: string;
+  userId?: string;
 
   @Column()
   @IsNotEmpty({
     message: 'permissionId must be not empty',
   })
-  permissionId: number;
+  permissionId?: number;
 
   @ManyToOne(() => Permission, (permission) => permission)
-  permission: Permission;
+  permission?: Permission;
 
   @ManyToOne(() => User, (user) => user)
-  user: User;
+  user?: User;
 }

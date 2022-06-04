@@ -11,11 +11,10 @@ export class AppService {
   }
 
   async getRates(): Promise<any> {
-    const result = await firstValueFrom(
+    return firstValueFrom(
       this.httpService.get(
         'https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/uah.json',
       ),
     );
-    return result;
   }
 }

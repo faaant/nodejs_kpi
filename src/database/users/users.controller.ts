@@ -26,21 +26,21 @@ export class UsersController {
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Get()
   async getAll() {
-    return await this.usersService.getUsers();
+    return this.usersService.getUsers();
   }
 
   @Permissions('get-user')
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Get(':id')
   async get(@Param() params: { id: string }) {
-    return await this.usersService.getUserById(params.id);
+    return this.usersService.getUserById(params.id);
   }
 
   @Post()
   async create(@Body() body: User) {
     const user = new User();
     createUserObject(body, user);
-    return await this.usersService.createUser(user);
+    return this.usersService.createUser(user);
   }
 
   @Permissions('update-certain-user')
@@ -52,13 +52,13 @@ export class UsersController {
   ) {
     const user: User = await this.usersService.getUserById(params.id);
     createUserObject(req.body, user);
-    return await this.usersService.updateUser(user);
+    return this.usersService.updateUser(user);
   }
 
   @Permissions('delete-user')
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Delete(':id')
   async deleteUser(@Param() params: { id: string }) {
-    return await this.usersService.deleteUser(params.id);
+    return this.usersService.deleteUser(params.id);
   }
 }

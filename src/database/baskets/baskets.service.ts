@@ -12,11 +12,11 @@ export class BasketsService {
   ) {}
 
   async getAll(): Promise<Baskets[]> {
-    return await this.pairsRepository.find();
+    return this.pairsRepository.find();
   }
 
   async getBaskets(_id: string): Promise<Baskets[]> {
-    return await this.pairsRepository.find({
+    return this.pairsRepository.find({
       select: ['productId'],
       where: [{ userId: _id }],
     });
@@ -26,26 +26,28 @@ export class BasketsService {
     _userId: string,
     _productId: string,
   ): Promise<Baskets[]> {
-    return await this.pairsRepository.find({
+    return this.pairsRepository.find({
       select: ['productId'],
       where: [{ userId: _userId, productId: _productId }],
     });
   }
 
-  async addProduct(baskets: Baskets) {
+  async addProduct(baskets: Baskets): Promise<Baskets> {
     const error = await validate(baskets, { skipMissingProperties: true });
     if (error.length > 0) {
       throw new BadRequestException();
     }
     await this.pairsRepository.create(baskets);
     await this.pairsRepository.save(baskets);
+    return baskets;
   }
 
-  async deleteProduct(baskets: Baskets) {
+  async deleteProduct(baskets: Baskets): Promise<Baskets> {
     const error = await validate(baskets, { skipMissingProperties: true });
     if (error.length > 0) {
       throw new BadRequestException();
     }
     await this.pairsRepository.delete(baskets);
+    return baskets;
   }
 }

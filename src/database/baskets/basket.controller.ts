@@ -19,11 +19,9 @@ export class BasketController {
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Get()
   async getProducts(@Req() req: Request) {
-    const jwtData = this.jwtTokenService.decode(
-      req.headers['authorization'].split(' ')[1],
-    );
+    const jwtData = this.jwtTokenService.decode(req.cookies?.jwt);
     if (typeof jwtData === 'object') {
-      return await this.basketsService.getBaskets(jwtData?.id);
+      return this.basketsService.getBaskets(jwtData?.id);
     }
   }
 
@@ -31,14 +29,12 @@ export class BasketController {
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Delete()
   async deleteProduct(@Req() req: Request) {
-    const jwtData = this.jwtTokenService.decode(
-      req.headers['authorization'].split(' ')[1],
-    );
+    const jwtData = this.jwtTokenService.decode(req.cookies?.jwt);
     if (typeof jwtData === 'object') {
-      req.body.userId = jwtData.id;
+      req.body.userId = jwtData?.id;
       const userProduct = new Baskets();
       createBasketObject(req.body, userProduct);
-      return await this.basketsService.deleteProduct(userProduct);
+      return this.basketsService.deleteProduct(userProduct);
     }
   }
 
@@ -46,14 +42,12 @@ export class BasketController {
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Post()
   async addProduct(@Req() req: Request) {
-    const jwtData = this.jwtTokenService.decode(
-      req.headers['authorization'].split(' ')[1],
-    );
+    const jwtData = this.jwtTokenService.decode(req.cookies?.jwt);
     if (typeof jwtData === 'object') {
-      req.body.userId = jwtData.id;
+      req.body.userId = jwtData?.id;
       const userProduct = new Baskets();
       createBasketObject(req.body, userProduct);
-      return await this.basketsService.addProduct(userProduct);
+      return this.basketsService.addProduct(userProduct);
     }
   }
 }

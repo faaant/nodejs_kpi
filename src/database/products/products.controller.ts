@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   Put,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
@@ -16,6 +17,7 @@ import { ProductsService } from '@products/products.service';
 import { Permissions } from '@shared/decorators/permissions.decorator';
 import { createProductObject } from '@products/utils/product.functions';
 import { PermissionGuard } from '@guards/permission.guard';
+import { Request } from 'express';
 
 @Controller('products')
 export class ProductsController {
@@ -31,8 +33,6 @@ export class ProductsController {
     return this.productsService.createProduct(newProduct);
   }
 
-  @Permissions('update-product')
-  @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @Permissions('update-product')
   @UseGuards(AuthGuard('jwt'), PermissionGuard)
   @HttpCode(200)
@@ -59,5 +59,10 @@ export class ProductsController {
   @Get()
   async getAllProducts(): Promise<Product[]> {
     return await this.productsService.getProducts();
+  }
+
+  @Get(':id')
+  async getProduct(@Param() params: { id: string }): Promise<Product> {
+    return await this.productsService.getProduct(params.id);
   }
 }

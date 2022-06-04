@@ -27,7 +27,6 @@ export class PermissionGuard implements CanActivate {
       const permisionsVocabulary =
         await this.permissionsService.getPermissions();
 
-      console.log(req);
       for (const permission of neededPermissions) {
         if (
           !userPermissions.some((permissionId) => {

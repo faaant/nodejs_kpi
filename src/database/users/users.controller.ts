@@ -57,7 +57,6 @@ export class UsersController {
       });
   }
 
-  @UseGuards(AuthGuard('jwt'))
   @Post()
   async create(@Req() req, @Res() res) {
     const user = new User();

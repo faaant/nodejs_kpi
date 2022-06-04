@@ -5,11 +5,8 @@ import {
   Put,
   Delete,
   Param,
-  Req,
-  Res,
   Body,
   HttpCode,
-  HttpStatus,
 } from '@nestjs/common';
 
 import { UsersService } from '@users/users.service';

@@ -6,8 +6,6 @@ import {
   HttpCode,
   Param,
   Post,
-  Req,
-  Res,
 } from '@nestjs/common';
 import { UserPermissions } from './user-permissions.entity';
 import { UserPermissionsService } from './user-permissions.service';

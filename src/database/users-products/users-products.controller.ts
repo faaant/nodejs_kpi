@@ -6,8 +6,6 @@ import {
   HttpCode,
   Param,
   Post,
-  Req,
-  Res,
 } from '@nestjs/common';
 import { UsersProductsService } from '@users-products/users-products.service';
 import { UserProducts } from '@users-products/user-products.entity';

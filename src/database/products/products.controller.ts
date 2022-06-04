@@ -7,8 +7,6 @@ import {
   Param,
   Post,
   Put,
-  Req,
-  Res,
 } from '@nestjs/common';
 
 import { Product } from '@products/product.entity';

@@ -40,10 +40,13 @@ export class UsersService {
       throw { message: 'Data is incorrect.' };
     }
     await this.usersRepository.update(user.id, user);
+    return user;
   }
 
   async deleteUser(id: string) {
+    const user: User = await this.getUserById(id);
     await this.usersRepository.delete(id);
+    return user;
   }
 
   async createUser(user: User) {
@@ -54,5 +57,6 @@ export class UsersService {
     await this.usersRepository.create(user);
     await this.usersRepository.save(user);
     await this.userPermissionsService.addDefaultUserPermissions(user.id);
+    return user;
   }
 }

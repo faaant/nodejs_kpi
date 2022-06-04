@@ -39,10 +39,13 @@ export class ProductsService {
       throw { message: 'Data is incorrect.' };
     }
     await this.productsRepository.update(product.id, product);
+    return product;
   }
 
   async deleteProduct(id: string) {
+    const product: Product = await this.getProduct(id);
     await this.productsRepository.delete(id);
+    return product;
   }
 
   async createProduct(product: Product) {
@@ -52,5 +55,6 @@ export class ProductsService {
     }
     await this.productsRepository.create(product);
     await this.productsRepository.save(product);
+    return product;
   }
 }

@@ -4,6 +4,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 
 import * as dotenv from 'dotenv';
 import { UsersService } from '@users/users.service';
+import { Request } from 'express';
 dotenv.config();
 
 @Injectable()
@@ -17,10 +18,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   private static extractJWT(req: Request): string | null {
-    const cookies = req.headers.get('Cookie');
-    console.log('cookies');
+    const cookies = req.headers?.cookie;
     if (cookies) {
-      const cookiesObj = cookies.split(';').map((el: any) => el.split('='))
+      const cookiesObj = cookies.split(';').map((el: string) => el.split('='))
         ? Object.fromEntries(cookies.split(';').map((el: any) => el.split('=')))
         : null;
       return cookiesObj?.jwt ? cookiesObj.jwt : null;

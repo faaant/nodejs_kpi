@@ -1,6 +1,6 @@
-import { Controller, Post, Res, Body, HttpCode } from '@nestjs/common';
+import { Controller, Post, Res, Req, Body, HttpCode } from '@nestjs/common';
 import { AuthService } from '@auth/auth.service';
-import { Response } from 'express';
+import { Response, Request } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -8,14 +8,11 @@ export class AuthController {
 
   @HttpCode(200)
   @Post('login')
-  login(
-    @Body() body: { username: string; password: string },
-    @Res() res: Response,
-  ) {
-    this.authService.login(body).then((jwtToken) => {
+  login(@Req() req: Request, @Res() res: Response) {
+    return this.authService.login(req.body).then((jwtToken) => {
       res.cookie('jwt', jwtToken.access_token, {
         httpOnly: true,
-        sameSite: true,
+        sameSite: 'strict',
       });
       return res.json(jwtToken);
     });

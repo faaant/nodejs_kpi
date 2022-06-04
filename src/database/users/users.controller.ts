@@ -7,7 +7,6 @@ import {
   Param,
   Body,
   HttpCode,
-  HttpStatus,
   UseGuards,
   Req,
 } from '@nestjs/common';
@@ -19,6 +18,7 @@ import { createUserObject } from '@users/utils/user.functions';
 import { JWTTokenService } from '@shared/services/jwt-token.service';
 import { Permissions } from '@shared/decorators/permissions.decorator';
 import { PermissionGuard } from '@guards/permission.guard';
+import { Request } from 'express';
 
 @Controller('users')
 export class UsersController {
@@ -51,20 +51,18 @@ export class UsersController {
     return await this.usersService.createUser(newUser);
   }
 
-  // @Permissions('update-user')
-  // @UseGuards(AuthGuard('jwt'), PermissionGuard)
-  // @HttpCode(200)
-  // @Put()
-  // async update(@Req() req: Request, @Body() body : User) {
-  //   const jwtData = this.jwtTokenService.decode(
-  //     req.headers.get('authorization')
-  //   );
-  //   if (typeof jwtData === 'object') {
-  //     const user: User = await this.usersService.getUser(jwtData.username);
-  //     createUserObject(body, user);
-  //     return await this.usersService.updateUser(user)
-  //   }
-  // }
+  @Permissions('update-user')
+  @UseGuards(AuthGuard('jwt'), PermissionGuard)
+  @HttpCode(200)
+  @Put()
+  async update(@Req() req: Request, @Body() body: User) {
+    const jwtData = this.jwtTokenService.decode(req.cookies?.jwt);
+    if (typeof jwtData === 'object') {
+      const user: User = await this.usersService.getUser(jwtData?.username);
+      createUserObject(body, user);
+      return await this.usersService.updateUser(user);
+    }
+  }
 
   @HttpCode(200)
   @Put(':id')

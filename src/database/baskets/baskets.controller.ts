@@ -5,8 +5,6 @@ import {
   Get,
   Param,
   Post,
-  Req,
-  Res,
   UseGuards,
 } from '@nestjs/common';
 import { BasketsService } from '@baskets/baskets.service';

@@ -30,7 +30,7 @@ export class ProductsController {
   @HttpCode(200)
   @Put(':id')
   async updateProduct(
-    @Param() params: any,
+    @Param() params: { id: string },
     @Body() product: Product,
   ): Promise<Product> {
     const updatedProduct: Product = await this.productsService.getProduct(
@@ -42,7 +42,7 @@ export class ProductsController {
 
   @HttpCode(200)
   @Delete(':id')
-  async deleteProduct(@Param() params: any): Promise<Product> {
+  async deleteProduct(@Param() params: { id: string }): Promise<Product> {
     return await this.productsService.deleteProduct(params.id);
   }
 

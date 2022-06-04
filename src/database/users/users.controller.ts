@@ -28,7 +28,7 @@ export class UsersController {
 
   @HttpCode(200)
   @Get(':id')
-  get(@Param() params: any) {
+  get(@Param() params: { id: string }) {
     return this.usersService.getUserById(params.id);
   }
 
@@ -42,7 +42,7 @@ export class UsersController {
 
   @HttpCode(200)
   @Put(':id')
-  async updateCertainUser(@Param() params: any, @Body() user: User) {
+  async updateCertainUser(@Param() params: { id: string }, @Body() user: User) {
     const updatedUser: User = await this.usersService.getUserById(params.id);
     createUserObject(user, updatedUser);
     return await this.usersService.updateUser(updatedUser);
@@ -50,7 +50,7 @@ export class UsersController {
 
   @HttpCode(200)
   @Delete(':id')
-  async deleteUser(@Param() params: any) {
+  async deleteUser(@Param() params: { id: string }) {
     return this.usersService.deleteUser(params.id);
   }
 }

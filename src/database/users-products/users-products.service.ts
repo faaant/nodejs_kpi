@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserProducts } from '@users-products/user-products.entity';
@@ -35,7 +35,7 @@ export class UsersProductsService {
   async addProduct(userProduct: UserProducts): Promise<UserProducts> {
     const error = await validate(userProduct, { skipMissingProperties: true });
     if (error.length > 0) {
-      throw { message: 'Data is incorrect.' };
+      throw new BadRequestException();
     }
 
     await this.pairsRepository.create(userProduct);
@@ -46,7 +46,7 @@ export class UsersProductsService {
   async deleteProduct(userProduct: UserProducts): Promise<UserProducts> {
     const error = await validate(userProduct, { skipMissingProperties: true });
     if (error.length > 0) {
-      throw { message: 'Data is incorrect.' };
+      throw new BadRequestException();
     }
     await this.pairsRepository.delete(userProduct);
     return userProduct;

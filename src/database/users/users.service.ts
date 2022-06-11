@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '@users/user.entity';
+import { validate } from 'class-validator';
 
 @Injectable()
 export class UsersService {
@@ -32,6 +33,10 @@ export class UsersService {
   }
 
   async updateUser(user: User): Promise<User> {
+    const error = await validate(user, { skipMissingProperties: true });
+    if (error.length > 0) {
+      throw new BadRequestException();
+    }
     await this.usersRepository.save(user);
     return user;
   }
@@ -43,6 +48,10 @@ export class UsersService {
   }
 
   async createUser(user: User): Promise<User> {
+    const error = await validate(user, { skipMissingProperties: true });
+    if (error.length > 0) {
+      throw new BadRequestException();
+    }
     await this.usersRepository.create(user);
     await this.usersRepository.save(user);
     return user;

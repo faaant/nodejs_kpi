@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { Product } from '@products/product.entity';
+import { validate } from 'class-validator';
 
 @Injectable()
 export class ProductsService {
@@ -33,6 +34,10 @@ export class ProductsService {
   }
 
   async updateProduct(product: Product): Promise<Product> {
+    const error = await validate(product, { skipMissingProperties: true });
+    if (error.length > 0) {
+      throw new BadRequestException();
+    }
     await this.productsRepository.save(product);
     return product;
   }
@@ -44,6 +49,10 @@ export class ProductsService {
   }
 
   async createProduct(product: Product): Promise<Product> {
+    const error = await validate(product);
+    if (error.length > 0) {
+      throw new BadRequestException();
+    }
     await this.productsRepository.create(product);
     await this.productsRepository.save(product);
     return product;

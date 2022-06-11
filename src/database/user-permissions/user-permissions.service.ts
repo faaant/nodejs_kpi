@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Permission } from '@permissions/permissions.entity';
@@ -51,7 +51,7 @@ export class UserPermissionsService {
       skipMissingProperties: true,
     });
     if (error.length > 0) {
-      throw { message: 'Data is incorrect.' };
+      throw new BadRequestException();
     }
     await this.userPermissionsRepository.create(userPermission);
     await this.userPermissionsRepository.save(userPermission);

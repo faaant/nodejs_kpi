@@ -50,4 +50,9 @@ export class ProductsController {
   getAllProducts(): Promise<Product[]> {
     return this.productsService.getProducts();
   }
+
+  @Get(':id')
+  getProduct(@Param() params: { id: string }): Promise<Product> {
+    return this.productsService.getProduct(params.id);
+  }
 }
